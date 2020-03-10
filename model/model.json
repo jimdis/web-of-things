@@ -1,8 +1,99 @@
 {
-  "field1": {
-    "data": []
+  "id": "http://localhost:5000",
+  "name": "Raspberry Pi with Sense HAT",
+  "description": "A WoT-connected Raspberry Pi with a Sense HAT.",
+  "tags": ["raspberry", "pi", "WoT", "Sense", "HAT"],
+  "customFields": {
+    "hostname": "localhost",
+    "port": 5000,
+    "secure": true,
+    "dataArraySize": 30
   },
-  "field2": {
-    "data": ["initial"]
+  "links": {
+    "product": {
+      "link": "https://www.raspberrypi.org/products/sense-hat/",
+      "title": "Product this Web Thing is based on"
+    },
+    "properties": {
+      "link": "/properties",
+      "title": "List of Properties",
+      "resources": {
+        "temperature": {
+          "name": "Temperature Sensor",
+          "description": "An ambient temperature sensor.",
+          "values": {
+            "t": {
+              "name": "Temperature sensor",
+              "description": "The temperature in celsius",
+              "unit": "celsius"
+            }
+          },
+          "tags": ["sensor", "public", "indoors"]
+        },
+        "humidity": {
+          "name": "Humidity Sensor",
+          "description": "An ambient humidity sensor.",
+          "values": {
+            "h": {
+              "name": "Humidity",
+              "description": "Percentage of Humidity",
+              "unit": "%"
+            }
+          },
+          "tags": ["sensor", "public"]
+        },
+        "pressure": {
+          "name": "Air Pressure Sensor",
+          "description": "A barometric pressure sensor.",
+          "values": {
+            "p": {
+              "name": "Pressure",
+              "description": "Pressure in millibars",
+              "unit": "mbar"
+            }
+          },
+          "tags": ["sensor", "public"]
+        },
+        "leds": {
+          "name": "LED board",
+          "description": "The LED board of this device.",
+          "values": {
+            "message": {
+              "name": "Message",
+              "description": "The latest message shown by the LED board"
+            },
+            "tags": ["sensor", "public"]
+          }
+        }
+      },
+      "actions": {
+        "link": "/actions",
+        "title": "Actions of this Web Thing",
+        "resources": {
+          "ledState": {
+            "name": "Display message on LED board",
+            "description": "Display a message on the LED board",
+            "values": {
+              "message": {
+                "type": "string",
+                "required": true
+              }
+            }
+          }
+        }
+      },
+      "type": {
+        "link": "http://model.webofthings.io/",
+        "title": "Instance type of the Pi"
+      },
+      "help": {
+        "link": "http://webofthings.org/docs/pi/",
+        "title": "Documentation"
+      },
+      "ui": {
+        "link": "/",
+        "title": "User Interface"
+      }
+    }
   }
 }
