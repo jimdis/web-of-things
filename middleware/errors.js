@@ -6,6 +6,7 @@
  */
 // eslint-disable-next-line no-unused-vars
 module.exports = (err, req, res, _) => {
+  console.error(err)
   if (err.statusCode) {
     return res
       .status(err.statusCode)

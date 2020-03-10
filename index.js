@@ -5,6 +5,7 @@ const compression = require('compression')
 const cors = require('cors')
 const morgan = require('morgan')
 const app = express()
+const response = require('./middleware/response')
 const errors = require('./middleware/errors')
 const collectData = require('./lib/collectData')
 const ngrok = require('./lib/ngrok')
@@ -27,15 +28,13 @@ app.use(compression())
 app.use(cors())
 
 // Routes
-app.use('/', require('./routes/root'))
+app.use('/', require('./routes'))
+
+// Handle response
+app.use(response)
+
 // Handle errors
-
 app.use(errors)
-
-// Handle 404
-app.use((req, res) => {
-  return res.status(404).json({ error: { code: 404, message: 'Not found' } })
-})
 
 const port = process.env.PORT || 5000
 

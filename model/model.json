@@ -65,35 +65,35 @@
             "tags": ["sensor", "public"]
           }
         }
-      },
-      "actions": {
-        "link": "/actions",
-        "title": "Actions of this Web Thing",
-        "resources": {
-          "ledState": {
-            "name": "Display message on LED board",
-            "description": "Display a message on the LED board",
-            "values": {
-              "message": {
-                "type": "string",
-                "required": true
-              }
+      }
+    },
+    "actions": {
+      "link": "/actions",
+      "title": "Actions of this Web Thing",
+      "resources": {
+        "ledState": {
+          "name": "Display message on LED board",
+          "description": "Display a message on the LED board",
+          "values": {
+            "message": {
+              "type": "string",
+              "required": true
             }
           }
         }
-      },
-      "type": {
-        "link": "http://model.webofthings.io/",
-        "title": "Instance type of the Pi"
-      },
-      "help": {
-        "link": "http://webofthings.org/docs/pi/",
-        "title": "Documentation"
-      },
-      "ui": {
-        "link": "/",
-        "title": "User Interface"
       }
+    },
+    "type": {
+      "link": "http://model.webofthings.io/",
+      "title": "Instance type of the Pi"
+    },
+    "help": {
+      "link": "http://webofthings.org/docs/pi/",
+      "title": "Documentation"
+    },
+    "ui": {
+      "link": "/",
+      "title": "User Interface"
     }
   }
 }
