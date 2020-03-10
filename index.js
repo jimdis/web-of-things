@@ -6,8 +6,12 @@ const cors = require('cors')
 const morgan = require('morgan')
 const app = express()
 const errors = require('./middleware/errors')
+const collectData = require('./lib/collectData')
 
-// Middle-ware
+// Start collecting data from sensors
+collectData.start()
+
+// Middleware
 if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'))
 }
