@@ -7,11 +7,11 @@ const morgan = require('morgan')
 const app = express()
 const response = require('./middleware/response')
 const errors = require('./middleware/errors')
-const collectData = require('./lib/collectData')
+const runScripts = require('./lib/runScripts')
 const ngrok = require('./lib/ngrok')
 
 // Start collecting data from sensors
-collectData.start()
+runScripts.collectData()
 
 // Middleware
 if (process.env.NODE_ENV !== 'production') {

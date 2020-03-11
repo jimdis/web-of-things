@@ -58,7 +58,7 @@
           "name": "LED board",
           "description": "The LED board of this device.",
           "values": {
-            "message": {
+            "m": {
               "name": "Message",
               "description": "The latest message shown by the LED board"
             },

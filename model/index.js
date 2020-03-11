@@ -1,2 +1,1 @@
-const model = require('./model.json')
-module.exports = model
+module.exports = require('./model.json')
