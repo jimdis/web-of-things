@@ -4,9 +4,6 @@
   "description": "A WoT-connected Raspberry Pi with a Sense HAT.",
   "tags": ["raspberry", "pi", "WoT", "Sense", "HAT"],
   "customFields": {
-    "hostname": "localhost",
-    "port": 5000,
-    "secure": true,
     "dataArraySize": 30
   },
   "links": {
@@ -28,7 +25,8 @@
               "unit": "celsius"
             }
           },
-          "tags": ["sensor", "public", "indoors"]
+          "tags": ["sensor", "public", "indoors"],
+          "data": []
         },
         "humidity": {
           "name": "Humidity Sensor",
@@ -40,7 +38,8 @@
               "unit": "%"
             }
           },
-          "tags": ["sensor", "public"]
+          "tags": ["sensor", "public"],
+          "data": []
         },
         "pressure": {
           "name": "Air Pressure Sensor",
@@ -52,7 +51,8 @@
               "unit": "mbar"
             }
           },
-          "tags": ["sensor", "public"]
+          "tags": ["sensor", "public"],
+          "data": []
         },
         "leds": {
           "name": "LED board",
@@ -63,7 +63,8 @@
               "description": "The latest message shown by the LED board"
             },
             "tags": ["sensor", "public"]
-          }
+          },
+          "data": []
         }
       }
     },
@@ -79,7 +80,8 @@
               "type": "string",
               "required": true
             }
-          }
+          },
+          "data": []
         }
       }
     },
