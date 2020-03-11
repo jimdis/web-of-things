@@ -58,7 +58,7 @@
           "name": "LED board",
           "description": "The LED board of this device.",
           "values": {
-            "m": {
+            "message": {
               "name": "Message",
               "description": "The latest message shown by the LED board"
             },
@@ -71,8 +71,8 @@
       "link": "/actions",
       "title": "Actions of this Web Thing",
       "resources": {
-        "ledState": {
-          "name": "Display message on LED board",
+        "sendMessage": {
+          "name": "Send message to LED board",
           "description": "Display a message on the LED board",
           "values": {
             "message": {
