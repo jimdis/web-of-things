@@ -90,7 +90,7 @@
       "title": "Instance type of the Pi"
     },
     "help": {
-      "link": "http://webofthings.org/docs/pi/",
+      "link": "https://www.raspberrypi.org/documentation/hardware/sense-hat/",
       "title": "Documentation"
     },
     "ui": {
