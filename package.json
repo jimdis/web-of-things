@@ -1,0 +1,14 @@
+{
+  "name": "webthing",
+  "version": "1.0.0",
+  "description": "Web of Things server and client for Raspberry Pi Sense-HAT",
+  "main": "/server/index.js",
+  "repository": "https://gitlab.lnu.se/1dv527/student/jd222qe/web-of-things",
+  "author": "Jim Disenstam",
+  "license": "MIT",
+  "scripts": {
+    "server": "cd server && yarn dev",
+    "client": "cd client && yarn start",
+    "deploy": "git subtree push --prefix server pi master --squash"
+  }
+}
