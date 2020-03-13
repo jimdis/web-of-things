@@ -1,12 +1,12 @@
 import React from 'react'
 import moment from 'moment'
-import { ThingResource, ThingValue } from '../api/thingApi'
+import { IProperty } from '../api/thingApi'
 
 type Props = {
-  resource: ThingResource
+  resource: IProperty
 }
 
-const createListItem = (value: ThingValue) => {
+const createListItem = (value: IProperty) => {
   return (
     <ul>
       {Object.keys(value).map(key => (

@@ -1,21 +1,22 @@
 import { useState, useEffect } from 'react'
-import { ThingResource, fetchProperties } from '../api/thingApi'
+import { IProperty, IEndpoints, fetchData } from '../api/thingApi'
+
 const useDashboard = () => {
-  const [properties, setProperties] = useState<ThingResource[]>([])
+  const [properties, setProperties] = useState<IProperty[]>([])
+  const [endpoints, setEndpoints] = useState({})
   const [error, setError] = useState<String | null>(null)
 
   useEffect(() => {
-    fetchProperties()
-      .then(properties => {
-        setProperties(properties)
-      })
-      .catch((e: Error) => setError(e.message))
+    fetchData()
   }, [])
 
-  useEffect(() => {
-    if (properties.length) {
-    }
-  }, [properties])
+  // useEffect(() => {
+  //   fetchProperties('/properties')
+  //     .then(properties => {
+  //       setProperties(properties)
+  //     })
+  //     .catch((e: Error) => setError(e.message))
+  // }, [])
 
   return { properties, error }
 }

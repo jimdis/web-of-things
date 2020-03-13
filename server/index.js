@@ -25,7 +25,12 @@ app.use(
 )
 app.use(compression())
 
-app.use(cors())
+app.use(
+  cors({
+    methods: ['GET', 'POST'],
+    exposedHeaders: '*',
+  })
+)
 
 // Routes
 app.use('/', require('./routes'))
