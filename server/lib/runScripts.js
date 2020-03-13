@@ -42,14 +42,14 @@ module.exports.sendMessage = message => {
   const id = shortid.generate()
   const actionName = Object.keys(actionResource.values)[0]
   const valueName = Object.keys(propertyResource.values)[0]
-  const timeStamp = new Date().toISOString()
+  const timestamp = new Date().toISOString()
   const actionObject = {
     id,
     value: {
       [actionName]: message,
     },
     status: 'pending',
-    timeStamp,
+    timestamp,
   }
   updateDataArray(actionResource.data, actionObject)
 
@@ -59,7 +59,7 @@ module.exports.sendMessage = message => {
       actionObject.status = 'completed'
       updateDataArray(propertyResource.data, {
         [valueName]: message,
-        timeStamp,
+        timestamp,
       })
     }, 1000)
   } else {
@@ -75,7 +75,7 @@ module.exports.sendMessage = message => {
         actionObject.status = 'completed'
         updateDataArray(propertyResource.data, {
           [valueName]: data[0],
-          timeStamp,
+          timestamp,
         })
       }
     })
@@ -103,10 +103,10 @@ module.exports.collectData = (interval = 60) => {
         }
         const resource = model.links.properties.resources[key]
         const valueName = Object.keys(resource.values)[0]
-        const timeStamp = new Date().toISOString()
+        const timestamp = new Date().toISOString()
         updateDataArray(resource.data, {
           [valueName]: value,
-          timeStamp,
+          timestamp,
         })
       })
       setTimeout(updateSensorData, interval * 1000)

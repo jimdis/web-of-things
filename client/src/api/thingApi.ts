@@ -31,11 +31,12 @@ export type ThingResource = {
       }
     | undefined
   links: ThingLinks | undefined
+  values: ThingValue | undefined
 }
 
 // http://model.webofthings.io/#links
 export type ThingLinks = {
-  [key: string]: {
+  [id: string]: {
     link: string
     title: string
   }
@@ -43,17 +44,24 @@ export type ThingLinks = {
 
 // http://model.webofthings.io/#values
 export type ThingValue = {
-  [key: string]: {
-    name: string | undefined
-    description: string | undefined
-    type: string | undefined
-    unit: string | undefined
-    required: boolean | undefined
-    minValue: number | undefined
-    maxValue: number | undefined
-    enum: { [key: string]: string } | undefined
-  }
+  timestamp: string | undefined
+  [key: string]:
+    | {
+        name: string | undefined
+        description: string | undefined
+        type: string | undefined
+        unit: string | undefined
+        required: boolean | undefined
+        minValue: number | undefined
+        maxValue: number | undefined
+        enum: { [key: string]: string } | undefined
+      }
+    | any
 }
+
+export type ThingActions = {
+  values: ThingValue
+} & ThingResource
 
 // http://model.webofthings.io/#retrieve-recent-executions-of-a-specific-action
 export type ThingActionExecution = {
@@ -76,7 +84,13 @@ export const fetchProperties = async () => {
 }
 
 export const fetchProperty = async (id: string) => {
-  //TODO: continue here. Determine static type of a single property.
-  const { data } = await axios.get<ThingResource>(endpoints.property(id))
+  const { data } = await axios.get<{ [key: string]: any }>(
+    endpoints.property(id)
+  )
+  return data
+}
+
+export const fetchActions = async () => {
+  const { data } = await axios.get<ThingActions[]>(endpoints.properties)
   return data
 }
