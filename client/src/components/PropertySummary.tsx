@@ -8,12 +8,12 @@ type Props = {
   values?: ICreatedValue
 }
 
-//TODO: map keys of values to model..
-const Property = ({ name, description, values }: Props) => {
+const PropertySummary = ({ name, description, values }: Props) => {
   return (
     <div>
       <h1>{name}</h1>
-      <h2>{values?.timestamp}</h2>
+      <h2>{description}</h2>
+      <h3>{values?.timestamp}</h3>
       {values ? (
         <ul>
           {Object.keys(values)
@@ -31,4 +31,4 @@ const Property = ({ name, description, values }: Props) => {
   )
 }
 
-export default Property
+export default PropertySummary

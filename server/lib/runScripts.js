@@ -15,7 +15,12 @@ const getSensorValues = () =>
   new Promise((resolve, reject) => {
     //Dummy values for development environment
     if (process.env.NODE_ENV !== 'production') {
-      return resolve([30, 40, 50])
+      const getRandomNumber = range => Math.random() * range
+      return resolve([
+        getRandomNumber(50),
+        getRandomNumber(30),
+        getRandomNumber(1000),
+      ])
     }
     const options = {
       scriptPath: './scripts',

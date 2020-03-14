@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react'
-import { IThing, IProperty } from '../api/types'
+import { IThing, IProperty, ICreatedValue } from '../api/types'
 import useApi from '../api/useApi'
 
 const useDashboard = () => {
   const [properties, setProperties] = useState<IProperty[]>([])
+  const [propertyData, setPropertyData] = useState<
+    Record<string, ICreatedValue[]>
+  >({})
 
   const { endpoints, fetchData, model, error } = useApi()
 
@@ -19,6 +22,20 @@ const useDashboard = () => {
     fetchProperties()
   }, [endpoints])
 
-  return { model, properties, error }
+  const fetchPropertyData = async (id: string) => {
+    if (endpoints?.properties) {
+      const data = (await fetchData(`${endpoints.properties.url}/${id}`)) as
+        | ICreatedValue[]
+        | undefined
+      if (data) {
+        setPropertyData({
+          ...propertyData,
+          [id]: data,
+        })
+      }
+    }
+  }
+
+  return { model, properties, propertyData, fetchPropertyData, error }
 }
 export default useDashboard
