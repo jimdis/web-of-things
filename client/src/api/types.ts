@@ -1,25 +1,11 @@
-//TODO: Add base url
-import axios from 'axios'
-import parseLink from 'parse-link-header'
-const BASE_URL =
-  process.env.NODE_ENV === 'production'
-    ? '!!!!!!!INSERT PROD URL HERE!!!!'
-    : 'http://localhost:5000'
-
+//http://model.webofthings.io/#resources
 export interface IEndpoints {
+  model?: string
   properties?: string
-}
-
-//endpoints according to http://model.webofthings.io/#web-things-model
-export const endpoints = {
-  root: BASE_URL,
-  model: BASE_URL + '/model',
-  properties: BASE_URL + '/properties',
-  property: (id: string) => BASE_URL + '/properties/' + id,
-  actions: BASE_URL + '/actions',
-  action: (id: string) => BASE_URL + '/actions/' + id,
-  actionExecution: (id: string, actionId: string) =>
-    BASE_URL + '/actions/' + id + '/' + actionId,
+  actions?: string
+  product?: string
+  type?: string
+  help?: string
 }
 
 // http://model.webofthings.io/#common-constructs
@@ -108,30 +94,3 @@ export interface IProperty extends IThing {
 export interface IActionExecution {
   status: 'pending' | 'executing' | 'completed' | 'failed'
 }
-
-export const fetchData = async (endpoint: string = '/') => {
-  const res = await axios.get(BASE_URL + endpoint)
-  const links = parseLink(res.headers.link)
-  console.log(links)
-  // return data
-}
-
-// export const fetchModel = async () => {
-//   const { data } = await axios.get<ThingResource>(endpoints.model)
-//   return data
-// }
-
-export const fetchProperties = async (endpoint: string) => {
-  const { data } = await axios.get<IProperty[]>(BASE_URL + endpoint)
-  return data
-}
-
-// export const fetchProperty = async (id: string) => {
-//   const { data } = await axios.get<{ [k: string]: any }>(endpoints.property(id))
-//   return data
-// }
-
-// export const fetchActions = async () => {
-//   const { data } = await axios.get<ThingActions[]>(endpoints.properties)
-//   return data
-// }

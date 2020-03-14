@@ -1,41 +1,28 @@
 import React from 'react'
 import moment from 'moment'
-import { IProperty } from '../api/thingApi'
+import { IProperty, ICreatedValue } from '../api/types'
 
 type Props = {
-  resource: IProperty
-}
-
-const createListItem = (value: IProperty) => {
-  return (
-    <ul>
-      {Object.keys(value).map(key => (
-        <li key={key}>
-          {key}: ${value[key]}
-        </li>
-      ))}
-    </ul>
-  )
+  name: string
+  description?: string
+  values?: ICreatedValue
 }
 
 //TODO: map keys of values to model..
-const Property = ({ resource }: Props) => {
-  console.log(resource)
-  const { id, name, values } = resource
-  if (values) {
-    values.timestamp = moment(values.timestamp).format('YYYY-MM-DD H:mm:ss')
-  }
-
+const Property = ({ name, description, values }: Props) => {
   return (
     <div>
-      <h1>{name || `ID: ${id}`}</h1>
+      <h1>{name}</h1>
+      <h2>{values?.timestamp}</h2>
       {values ? (
         <ul>
-          {Object.keys(values).map(key => (
-            <li key={key}>
-              {key}: {values[key]}
-            </li>
-          ))}
+          {Object.keys(values)
+            .filter(k => k !== 'timestamp')
+            .map(key => (
+              <li key={key}>
+                {key}: {values[key]}
+              </li>
+            ))}
         </ul>
       ) : (
         <p>No values found for this property</p>

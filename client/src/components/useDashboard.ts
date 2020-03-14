@@ -1,23 +1,24 @@
 import { useState, useEffect } from 'react'
-import { IProperty, IEndpoints, fetchData } from '../api/thingApi'
+import { IThing, IProperty } from '../api/types'
+import useApi from '../api/useApi'
 
 const useDashboard = () => {
   const [properties, setProperties] = useState<IProperty[]>([])
-  const [endpoints, setEndpoints] = useState({})
-  const [error, setError] = useState<String | null>(null)
+
+  const { endpoints, fetchData, model, error } = useApi()
 
   useEffect(() => {
-    fetchData()
-  }, [])
+    const fetchProperties = async () => {
+      if (endpoints?.properties) {
+        const data = (await fetchData(endpoints.properties.url)) as
+          | IProperty[]
+          | undefined
+        setProperties(data ?? [])
+      }
+    }
+    fetchProperties()
+  }, [endpoints])
 
-  // useEffect(() => {
-  //   fetchProperties('/properties')
-  //     .then(properties => {
-  //       setProperties(properties)
-  //     })
-  //     .catch((e: Error) => setError(e.message))
-  // }, [])
-
-  return { properties, error }
+  return { model, properties, error }
 }
 export default useDashboard
