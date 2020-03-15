@@ -41,7 +41,7 @@ export interface IThing {
       resources?: {
         [k: string]: {
           values?: {
-            [k: string]: any
+            [k: string]: IValue
           }
           [k: string]: any
         }
@@ -91,4 +91,13 @@ export interface IProperty extends IThing {
 // http://model.webofthings.io/#retrieve-recent-executions-of-a-specific-action
 export interface IActionExecution {
   status: 'pending' | 'executing' | 'completed' | 'failed'
+}
+
+export interface ISubmitAction {
+  actionId: string
+  formState: FormState
+}
+
+export type FormState = {
+  [key: string]: CreatedValueType
 }

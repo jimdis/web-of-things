@@ -18,7 +18,6 @@ const PropertySummary = ({
   latestValues,
 }: Props) => {
   const displayValue = (value: CreatedValueType) => {
-    console.log(value)
     if (typeof value === 'number') {
       return Math.round(value)
     }
@@ -29,15 +28,15 @@ const PropertySummary = ({
   }
   return (
     <div>
-      <h1>{name}</h1>
-      <h2>{description}</h2>
-      <div>Tags</div>
+      <h3>{name}</h3>
+      <h4>{description}</h4>
+      <h4>Tags</h4>
       <ul>
         {tags.map((tag, i) => (
           <li key={tag + i}>{tag}</li>
         ))}
       </ul>
-      <h3>Data</h3>
+      <h4>Data</h4>
       {values ? (
         Object.keys(values).map(key => (
           <div key={key}>

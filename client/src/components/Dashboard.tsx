@@ -1,9 +1,8 @@
 import React from 'react'
-import moment from 'moment'
 import useDashboard from './useDashboard'
-import { IProperty, ICreatedValue } from '../api/types'
 import PropertySummary from './PropertySummary'
 import PropertyDetails from './PropertyDetails'
+import Action from './Action'
 
 const Dashboard = () => {
   const {
@@ -11,54 +10,77 @@ const Dashboard = () => {
     properties,
     propertyData,
     fetchPropertyData,
+    submitAction,
     error,
   } = useDashboard()
-  console.log(properties)
-  console.log(model)
 
-  const propertyResources = model?.links?.properties?.resources
+  const mapResourceToModel = (resourceKey: 'properties' | 'actions') => {
+    const resources = model?.links?.[resourceKey]?.resources
+    return resources
+      ? Object.keys(resources).map(k => ({
+          id: k,
+          name: resources[k].name as string | undefined,
+          description: resources[k].description as string | undefined,
+          tags: resources[k].tags as string[] | undefined,
+          values: resources[k].values,
+        }))
+      : []
+  }
 
-  const mappedProperties = propertyResources
-    ? Object.keys(propertyResources).map(k => ({
-        id: k,
-        tags: propertyResources[k].tags,
-        ...propertyResources[k],
-      }))
-    : []
-
-  console.log(mappedProperties)
-
-  console.log(propertyData)
+  const propertyResources = mapResourceToModel('properties')
+  const actionResources = mapResourceToModel('actions')
 
   const getData = (id: string) => properties.find(el => el.id === id)?.values
 
   return (
     <div>
       <h1>Dashboard</h1>
+
       {error && <p>Error! {error}</p>}
-      {propertyResources ? (
-        mappedProperties.map(p => (
-          <div key={p.id}>
-            <PropertySummary
-              name={p.name}
-              description={p.description}
-              tags={p.tags}
-              values={p.values}
-              latestValues={getData(p.id)}
+      <div>
+        <h2>Properties</h2>
+        {propertyResources.length ? (
+          propertyResources.map(p => (
+            <div key={p.id}>
+              <PropertySummary
+                name={p.name}
+                description={p.description}
+                tags={p.tags}
+                values={p.values}
+                latestValues={getData(p.id)}
+              />
+              {propertyData[p.id] && p.values ? (
+                <PropertyDetails values={p.values} data={propertyData[p.id]} />
+              ) : (
+                getData(p.id) && (
+                  <button onClick={() => fetchPropertyData(p.id)}>
+                    Get data
+                  </button>
+                )
+              )}
+            </div>
+          ))
+        ) : (
+          <p>No properties found..</p>
+        )}
+      </div>
+      <h2>Actions</h2>
+      {actionResources.length ? (
+        actionResources.map(a => (
+          <div key={a.id}>
+            <Action
+              name={a.name}
+              description={a.description}
+              values={a.values}
+              latestValues={getData(a.id)}
+              onSubmit={formState =>
+                submitAction({ actionId: a.id, formState })
+              }
             />
-            {propertyData[p.id] && p.values ? (
-              <PropertyDetails values={p.values} data={propertyData[p.id]} />
-            ) : (
-              getData(p.id) && (
-                <button onClick={() => fetchPropertyData(p.id)}>
-                  Get data
-                </button>
-              )
-            )}
           </div>
         ))
       ) : (
-        <p>No properties found..</p>
+        <p>No Actions found...</p>
       )}
     </div>
   )

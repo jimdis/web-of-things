@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { IThing, IProperty, ICreatedValue } from '../api/types'
+import { IThing, IProperty, ICreatedValue, ISubmitAction } from '../api/types'
 import useApi from '../api/useApi'
 
 const useDashboard = () => {
@@ -8,7 +8,7 @@ const useDashboard = () => {
     Record<string, ICreatedValue[]>
   >({})
 
-  const { endpoints, fetchData, model, error } = useApi()
+  const { endpoints, fetchData, model, postAction, error } = useApi()
 
   useEffect(() => {
     const fetchProperties = async () => {
@@ -36,6 +36,17 @@ const useDashboard = () => {
     }
   }
 
-  return { model, properties, propertyData, fetchPropertyData, error }
+  const submitAction = (action: ISubmitAction) => {
+    postAction(action)
+  }
+
+  return {
+    model,
+    properties,
+    propertyData,
+    fetchPropertyData,
+    submitAction,
+    error,
+  }
 }
 export default useDashboard
