@@ -21,6 +21,7 @@ const Dashboard = () => {
   const mappedProperties = propertyResources
     ? Object.keys(propertyResources).map(k => ({
         id: k,
+        tags: propertyResources[k].tags,
         ...propertyResources[k],
       }))
     : []
@@ -28,6 +29,8 @@ const Dashboard = () => {
   console.log(mappedProperties)
 
   console.log(propertyData)
+
+  const getData = (id: string) => properties.find(el => el.id === id)?.values
 
   return (
     <div>
@@ -39,13 +42,18 @@ const Dashboard = () => {
             <PropertySummary
               name={p.name}
               description={p.description}
+              tags={p.tags}
               values={p.values}
-              latestValues={properties.find(el => el.id === p.id)?.values}
+              latestValues={getData(p.id)}
             />
-            {propertyData[p.id] ? (
-              <PropertyDetails unit="FIX!" values={propertyData[p.id]} />
+            {propertyData[p.id] && p.values ? (
+              <PropertyDetails values={p.values} data={propertyData[p.id]} />
             ) : (
-              <button onClick={() => fetchPropertyData(p.id)}>Get data</button>
+              getData(p.id) && (
+                <button onClick={() => fetchPropertyData(p.id)}>
+                  Get data
+                </button>
+              )
             )}
           </div>
         ))

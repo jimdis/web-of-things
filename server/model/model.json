@@ -61,9 +61,9 @@
             "message": {
               "name": "Message",
               "description": "The latest message shown by the LED board"
-            },
-            "tags": ["sensor", "public"]
+            }
           },
+          "tags": ["sensor", "public"],
           "data": []
         }
       }

@@ -20,7 +20,7 @@ const getResources = subModel =>
     return {
       id: key,
       name: value.name,
-      values: value.data[value.data.length - 1] || {},
+      values: value.data[value.data.length - 1],
     }
   })
 

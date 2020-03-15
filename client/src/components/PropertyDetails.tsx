@@ -1,43 +1,59 @@
 import React from 'react'
 import moment from 'moment'
 import { VictoryTheme, VictoryLine, VictoryChart } from 'victory'
-import { IProperty, ICreatedValue } from '../api/types'
+import { CreatedValueType, IValue, ICreatedValue } from '../api/types'
 
 type Props = {
-  values: ICreatedValue[]
-  unit: string
+  values: Record<string, IValue>
+  data: ICreatedValue[]
 }
 
-const getNumber = (input: any) => {
-  if (typeof input === 'number') {
-    return input
+const PropertyDetails = ({ values, data }: Props) => {
+  if (!data.length) {
+    return <div>No data available</div>
   }
-  if (typeof input === 'string') {
-    return parseFloat(input)
-  }
-}
 
-const PropertyDetails = ({ values, unit }: Props) => {
-  if (!values.length) {
-    return <div>No Data!</div>
-  }
-  const keys = Object.keys(values[0]).filter(k => k !== 'timestamp')
-  console.log(keys)
-  if (keys.length === 1 && getNumber(values[0][keys[0]])) {
-    const data = values.map(v => ({
-      x: moment(v.timestamp).format('H:mm:ss'),
-      y: getNumber(v[keys[0]]),
+  const createChartData = (key: string) =>
+    data.map(d => ({
+      x: moment(d.timestamp).format('H:mm:ss'),
+      y: d[key] as number,
     }))
-    console.log(data)
-    return (
-      <div>
-        <VictoryChart theme={VictoryTheme.material}>
-          <VictoryLine data={data} />
-        </VictoryChart>
-      </div>
-    )
-  }
-  return <div>Not suitable for chart..</div>
+
+  const displayBoolean = (value: boolean) => (
+    <p>{value ? '\u2705' : '\u274C'}</p>
+  )
+
+  return (
+    <div>
+      {Object.keys(values).map(k => (
+        <div key={k}>
+          {typeof data[0][k] === 'number' ? (
+            <LineChart data={createChartData(k)} />
+          ) : typeof data[0][k] === 'boolean' ? (
+            displayBoolean(data[0][k] as boolean)
+          ) : (
+            <p>data[0][k]</p>
+          )}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+type LCProps = {
+  data: {
+    x: string
+    y: number
+  }[]
+}
+const LineChart = ({ data }: LCProps) => {
+  return (
+    <div>
+      <VictoryChart theme={VictoryTheme.material}>
+        <VictoryLine data={data} />
+      </VictoryChart>
+    </div>
+  )
 }
 
 export default PropertyDetails
