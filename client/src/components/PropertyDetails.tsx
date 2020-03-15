@@ -29,10 +29,17 @@ const PropertyDetails = ({ values, data }: Props) => {
         <div key={k}>
           {typeof data[0][k] === 'number' ? (
             <LineChart data={createChartData(k)} />
-          ) : typeof data[0][k] === 'boolean' ? (
-            displayBoolean(data[0][k] as boolean)
           ) : (
-            <p>data[0][k]</p>
+            <ul>
+              {data.map(d => (
+                <li key={d.timestamp}>
+                  {moment(d.timestamp).format('H:mm:ss')}:{' '}
+                  {typeof d[k] === 'boolean'
+                    ? displayBoolean(d[k] as boolean)
+                    : d[k]}
+                </li>
+              ))}
+            </ul>
           )}
         </div>
       ))}

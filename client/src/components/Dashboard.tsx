@@ -72,7 +72,6 @@ const Dashboard = () => {
               name={a.name}
               description={a.description}
               values={a.values}
-              latestValues={getData(a.id)}
               onSubmit={formState =>
                 submitAction({ actionId: a.id, formState })
               }
