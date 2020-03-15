@@ -16,25 +16,15 @@ const Dashboard = () => {
   console.log(properties)
   console.log(model)
 
-  //TODO: Create better map with unit that can also be mapped for data array..
-  const mapPropertyToModel = (property: IProperty) => {
-    const selectedProperty = model?.links?.properties?.resources?.[property.id]
-    const name = selectedProperty?.name || property.id
-    const description =
-      selectedProperty?.description || 'No description provided'
-    const values: ICreatedValue = {
-      timestamp: moment(property.values.timestamp).format('YYYY-MM-DD H:mm:ss'),
-    }
-    Object.keys(property.values)
-      .filter(k => k !== 'timestamp')
-      .forEach(key => {
-        const name = selectedProperty?.values?.[key].name || key
-        values[name] = property.values[key]
-      })
-    return { id: property.id, name, description, values }
-  }
+  const propertyResources = model?.links?.properties?.resources
 
-  const mappedProperties = properties.map(p => mapPropertyToModel(p))
+  const mappedProperties = propertyResources
+    ? Object.keys(propertyResources).map(k => ({
+        id: k,
+        ...propertyResources[k],
+      }))
+    : []
+
   console.log(mappedProperties)
 
   console.log(propertyData)
@@ -43,10 +33,15 @@ const Dashboard = () => {
     <div>
       <h1>Dashboard</h1>
       {error && <p>Error! {error}</p>}
-      {mappedProperties.length ? (
+      {propertyResources ? (
         mappedProperties.map(p => (
           <div key={p.id}>
-            <PropertySummary {...p} />
+            <PropertySummary
+              name={p.name}
+              description={p.description}
+              values={p.values}
+              latestValues={properties.find(el => el.id === p.id)?.values}
+            />
             {propertyData[p.id] ? (
               <PropertyDetails unit="FIX!" values={propertyData[p.id]} />
             ) : (

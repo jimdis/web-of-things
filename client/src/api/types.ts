@@ -29,11 +29,7 @@ export interface IThing {
           name?: string
           description?: string
           values?: {
-            [k: string]: {
-              name?: string
-              description?: string
-              [k: string]: any
-            } & IValue
+            [k: string]: IValue
           }
           [k: string]: any
         }
@@ -83,8 +79,10 @@ export interface IValue {
 
 export interface ICreatedValue {
   timestamp: string
-  [k: string]: number | boolean | string
+  [k: string]: CreatedValueType
 }
+
+export type CreatedValueType = number | boolean | string
 
 export interface IProperty extends IThing {
   values: ICreatedValue
