@@ -73,6 +73,7 @@ const useApi = () => {
     model,
     fetchData,
     postAction,
+    clearError: () => setError(null),
   }
 }
 

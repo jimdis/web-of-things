@@ -1,24 +1,40 @@
-import React from 'react'
+import React, { useState } from 'react'
 import moment from 'moment'
-import { Card, Tag, Divider, Statistic, Empty } from 'antd'
-import { CalendarTwoTone } from '@ant-design/icons'
+import { Button, Card, Tag, Divider, Statistic, Empty } from 'antd'
+import { EyeFilled, CalendarTwoTone } from '@ant-design/icons'
 import { ICreatedValue, IValue, CreatedValueType } from '../api/types'
+import PropertyDetails from './PropertyDetails'
 
 type Props = {
+  id: string
   name?: string
   description?: string
   tags?: string[]
   values?: Record<string, IValue>
+  data?: ICreatedValue[]
   latestValues?: ICreatedValue
+  fetchPropertyData: (id: string) => void
 }
 
-const PropertySummary = ({
-  name = 'No name provided',
+const Property = ({
+  id,
+  name,
   description = 'No description provided',
   tags = [],
   values,
+  data = [],
   latestValues,
+  fetchPropertyData,
 }: Props) => {
+  const [showDetails, setShowDetails] = useState<boolean>(false)
+
+  const handleToggleDetails = () => {
+    if (!data.length) {
+      fetchPropertyData(id)
+    }
+    setShowDetails(!showDetails)
+  }
+
   const displayValue = (value: CreatedValueType) => {
     if (typeof value === 'number') {
       return Math.round(value)
@@ -29,7 +45,14 @@ const PropertySummary = ({
     return value
   }
   return (
-    <Card title={name}>
+    <Card
+      title={name || id}
+      actions={[
+        <Button onClick={handleToggleDetails} icon={<EyeFilled />}>
+          {showDetails ? 'Hide ' : 'Show '} latest values
+        </Button>,
+      ]}
+    >
       <h4>{description}</h4>
       {tags.map((tag, i) => (
         <Tag color="blue" key={tag + i}>
@@ -56,12 +79,13 @@ const PropertySummary = ({
               {moment(latestValues.timestamp).format('YYYY-MM-DD H:mm:ss')}
             </span>
           </div>
+          {showDetails && <PropertyDetails values={values} data={data} />}
         </div>
       ) : (
-        <Empty />
+        <Empty description="No Data Available" />
       )}
     </Card>
   )
 }
 
-export default PropertySummary
+export default Property

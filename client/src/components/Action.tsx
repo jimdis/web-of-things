@@ -1,14 +1,34 @@
 import React, { useState } from 'react'
-import { IValue, FormState } from '../api/types'
+import { Card, Button, Tag, Divider, Statistic, Empty } from 'antd'
+import {
+  EyeFilled,
+  EditFilled,
+  InfoCircleTwoTone,
+  ApiOutlined,
+} from '@ant-design/icons'
+import { IValue, ICreatedAction, FormState, ISubmitAction } from '../api/types'
+import ActionDetails from './ActionDetails'
 
 type Props = {
+  id: string
   name?: string
   description?: string
   values?: Record<string, IValue>
-  onSubmit: (v: FormState) => void
+  data?: ICreatedAction[]
+  fetchActionData: (id: string) => void
+  submitAction: (a: ISubmitAction) => void
 }
 
-const Action = ({ name, description, values, onSubmit }: Props) => {
+const Action = ({
+  id,
+  name,
+  description = 'No description provided',
+  values,
+  data = [],
+  fetchActionData,
+  submitAction,
+}: Props) => {
+  const [showDetails, setShowDetails] = useState<boolean>(false)
   const [formState, setFormState] = useState<FormState>({})
 
   const handleChange = (e: any) => {
@@ -16,8 +36,16 @@ const Action = ({ name, description, values, onSubmit }: Props) => {
   }
   const handleSubmit = (e: any) => {
     e.preventDefault()
-    onSubmit(formState)
+    submitAction({ actionId: id, formState })
   }
+
+  const handleToggleDetails = () => {
+    if (!data.length) {
+      fetchActionData(id)
+    }
+    setShowDetails(!showDetails)
+  }
+
   const renderInput = (id: string) => {
     const value = values?.[id]
     if (value?.type === 'boolean') {
@@ -48,10 +76,25 @@ const Action = ({ name, description, values, onSubmit }: Props) => {
   }
 
   return (
-    <div>
-      <h3>{name}</h3>
-      <h4>{description}</h4>
-      <h4>Actions</h4>
+    <Card
+      title={name || id}
+      actions={[
+        <Button onClick={handleToggleDetails} icon={<EyeFilled />}>
+          {showDetails ? 'Hide ' : 'Show '} latest actions
+        </Button>,
+        <Button type="primary" icon={<EditFilled />}>
+          Submit action
+        </Button>,
+      ]}
+    >
+      <h4>
+        <span style={{ marginRight: 8 }}>
+          <InfoCircleTwoTone />
+        </span>
+        {description}
+      </h4>
+      {showDetails && <ActionDetails data={data} />}
+      {/* <h4>Actions</h4>
       {values ? (
         <div>
           <form onSubmit={handleSubmit}>
@@ -69,9 +112,9 @@ const Action = ({ name, description, values, onSubmit }: Props) => {
           </form>
         </div>
       ) : (
-        <p>No Data available</p>
-      )}
-    </div>
+        <Empty description="No Actions Available" />
+      )} */}
+    </Card>
   )
 }
 

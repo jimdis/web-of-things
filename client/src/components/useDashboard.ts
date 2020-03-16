@@ -16,7 +16,14 @@ const useDashboard = () => {
     Record<string, ICreatedAction[]>
   >({})
 
-  const { endpoints, fetchData, model, postAction, error } = useApi()
+  const {
+    endpoints,
+    fetchData,
+    model,
+    postAction,
+    error,
+    clearError,
+  } = useApi()
 
   useEffect(() => {
     const fetchProperties = async () => {
@@ -71,6 +78,7 @@ const useDashboard = () => {
     fetchActionData,
     submitAction,
     error,
+    clearError,
   }
 }
 export default useDashboard

@@ -1,5 +1,6 @@
 import React from 'react'
 import moment from 'moment'
+import { Card, Button, Tag, Divider, Statistic, Empty } from 'antd'
 import { ICreatedAction, CreatedValueType } from '../api/types'
 
 type Props = {
@@ -8,7 +9,7 @@ type Props = {
 
 const ActionDetails = ({ data }: Props) => {
   if (!data.length) {
-    return <div>No data available</div>
+    return <Empty description="No action data available" />
   }
 
   const showValue = (value: CreatedValueType) => {
