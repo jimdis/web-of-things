@@ -89,8 +89,12 @@ export interface IProperty extends IThing {
 }
 
 // http://model.webofthings.io/#retrieve-recent-executions-of-a-specific-action
-export interface IActionExecution {
+export interface ICreatedAction extends IThing {
+  timestamp: string
   status: 'pending' | 'executing' | 'completed' | 'failed'
+  value: {
+    [k: string]: CreatedValueType
+  }
 }
 
 export interface ISubmitAction {

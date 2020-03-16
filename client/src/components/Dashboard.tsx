@@ -3,13 +3,16 @@ import useDashboard from './useDashboard'
 import PropertySummary from './PropertySummary'
 import PropertyDetails from './PropertyDetails'
 import Action from './Action'
+import ActionDetails from './ActionDetails'
 
 const Dashboard = () => {
   const {
     model,
     properties,
     propertyData,
+    actionData,
     fetchPropertyData,
+    fetchActionData,
     submitAction,
     error,
   } = useDashboard()
@@ -76,6 +79,13 @@ const Dashboard = () => {
                 submitAction({ actionId: a.id, formState })
               }
             />
+            {actionData[a.id] ? (
+              <ActionDetails data={actionData[a.id]} />
+            ) : (
+              <button onClick={() => fetchActionData(a.id)}>
+                Get Latest Actions
+              </button>
+            )}
           </div>
         ))
       ) : (

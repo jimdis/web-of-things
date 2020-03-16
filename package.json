@@ -10,9 +10,5 @@
     "server": "cd server && yarn dev",
     "client": "cd client && yarn start",
     "deploy": "git subtree push --prefix server pi master --squash"
-  },
-  "dependencies": {
-    "@types/victory": "^33.1.4",
-    "victory": "^34.1.3"
   }
 }

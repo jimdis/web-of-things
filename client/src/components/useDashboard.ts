@@ -1,11 +1,19 @@
 import { useState, useEffect } from 'react'
-import { IThing, IProperty, ICreatedValue, ISubmitAction } from '../api/types'
+import {
+  IProperty,
+  ICreatedValue,
+  ICreatedAction,
+  ISubmitAction,
+} from '../api/types'
 import useApi from '../api/useApi'
 
 const useDashboard = () => {
   const [properties, setProperties] = useState<IProperty[]>([])
   const [propertyData, setPropertyData] = useState<
     Record<string, ICreatedValue[]>
+  >({})
+  const [actionData, setActionData] = useState<
+    Record<string, ICreatedAction[]>
   >({})
 
   const { endpoints, fetchData, model, postAction, error } = useApi()
@@ -36,6 +44,20 @@ const useDashboard = () => {
     }
   }
 
+  const fetchActionData = async (id: string) => {
+    if (endpoints?.actions) {
+      const data = (await fetchData(`${endpoints.actions.url}/${id}`)) as
+        | ICreatedAction[]
+        | undefined
+      if (data) {
+        setActionData({
+          ...actionData,
+          [id]: data,
+        })
+      }
+    }
+  }
+
   const submitAction = (action: ISubmitAction) => {
     postAction(action)
   }
@@ -44,7 +66,9 @@ const useDashboard = () => {
     model,
     properties,
     propertyData,
+    actionData,
     fetchPropertyData,
+    fetchActionData,
     submitAction,
     error,
   }
