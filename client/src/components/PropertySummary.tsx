@@ -1,5 +1,7 @@
 import React from 'react'
 import moment from 'moment'
+import { Card, Tag, Divider, Statistic, Empty } from 'antd'
+import { CalendarTwoTone } from '@ant-design/icons'
 import { ICreatedValue, IValue, CreatedValueType } from '../api/types'
 
 type Props = {
@@ -27,40 +29,38 @@ const PropertySummary = ({
     return value
   }
   return (
-    <div>
-      <h3>{name}</h3>
+    <Card title={name}>
       <h4>{description}</h4>
-      <h4>Tags</h4>
-      <ul>
-        {tags.map((tag, i) => (
-          <li key={tag + i}>{tag}</li>
-        ))}
-      </ul>
-      <h4>Data</h4>
-      {values ? (
-        Object.keys(values).map(key => (
-          <div key={key}>
-            <h4>{values[key].name}</h4>
-            <p>{values[key].description}</p>
-            <h4>Latest value</h4>
-            {latestValues && latestValues.timestamp ? (
-              <div>
-                <p>
-                  {moment(latestValues.timestamp).format('YYYY-MM-DD H:mm:ss')}
-                </p>
-                <p>
-                  {displayValue(latestValues[key])} {values[key].unit}
-                </p>
-              </div>
-            ) : (
-              <p>No Data available</p>
-            )}
+      {tags.map((tag, i) => (
+        <Tag color="blue" key={tag + i}>
+          {tag}
+        </Tag>
+      ))}
+      <Divider />
+      {values && latestValues?.timestamp ? (
+        <div>
+          {Object.keys(values).map(key => (
+            //TODO: Add description popover
+            <Statistic
+              key={key}
+              title={values[key].name}
+              value={displayValue(latestValues[key])}
+              suffix={values[key].unit}
+            />
+          ))}
+          <div>
+            <span style={{ marginRight: 8 }}>
+              <CalendarTwoTone />
+            </span>
+            <span>
+              {moment(latestValues.timestamp).format('YYYY-MM-DD H:mm:ss')}
+            </span>
           </div>
-        ))
+        </div>
       ) : (
-        <p>No Data available</p>
+        <Empty />
       )}
-    </div>
+    </Card>
   )
 }
 

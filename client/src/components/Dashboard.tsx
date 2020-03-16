@@ -1,4 +1,5 @@
 import React from 'react'
+import { Row, Col, Divider } from 'antd'
 import useDashboard from './useDashboard'
 import PropertySummary from './PropertySummary'
 import PropertyDetails from './PropertyDetails'
@@ -42,30 +43,35 @@ const Dashboard = () => {
       {error && <p>Error! {error}</p>}
       <div>
         <h2>Properties</h2>
-        {propertyResources.length ? (
-          propertyResources.map(p => (
-            <div key={p.id}>
-              <PropertySummary
-                name={p.name}
-                description={p.description}
-                tags={p.tags}
-                values={p.values}
-                latestValues={getData(p.id)}
-              />
-              {propertyData[p.id] && p.values ? (
-                <PropertyDetails values={p.values} data={propertyData[p.id]} />
-              ) : (
-                getData(p.id) && (
-                  <button onClick={() => fetchPropertyData(p.id)}>
-                    Get data
-                  </button>
-                )
-              )}
-            </div>
-          ))
-        ) : (
-          <p>No properties found..</p>
-        )}
+        <Row>
+          {propertyResources.length ? (
+            propertyResources.map(p => (
+              <Col key={p.id} xs={24} sm={12} md={8} lg={6}>
+                <PropertySummary
+                  name={p.name}
+                  description={p.description}
+                  tags={p.tags}
+                  values={p.values}
+                  latestValues={getData(p.id)}
+                />
+                {propertyData[p.id] && p.values ? (
+                  <PropertyDetails
+                    values={p.values}
+                    data={propertyData[p.id]}
+                  />
+                ) : (
+                  getData(p.id) && (
+                    <button onClick={() => fetchPropertyData(p.id)}>
+                      Get data
+                    </button>
+                  )
+                )}
+              </Col>
+            ))
+          ) : (
+            <p>No properties found..</p>
+          )}
+        </Row>
       </div>
       <h2>Actions</h2>
       {actionResources.length ? (

@@ -13,6 +13,7 @@
     "@types/react-dom": "^16.9.0",
     "@types/victory": "^33.1.4",
     "add": "^2.0.6",
+    "antd": "^4.0.3",
     "axios": "^0.19.2",
     "moment": "^2.24.0",
     "parse-link-header": "^1.0.1",

@@ -38,7 +38,7 @@
               "unit": "%"
             }
           },
-          "tags": ["sensor", "public"],
+          "tags": ["sensor", "indoors", "public"],
           "data": []
         },
         "pressure": {
@@ -51,7 +51,7 @@
               "unit": "mbar"
             }
           },
-          "tags": ["sensor", "public"],
+          "tags": ["sensor", "indoors", "public"],
           "data": []
         },
         "leds": {
@@ -63,7 +63,7 @@
               "description": "The latest message shown by the LED board"
             }
           },
-          "tags": ["sensor", "public"],
+          "tags": ["led", "scrolling", "public"],
           "data": []
         }
       }
