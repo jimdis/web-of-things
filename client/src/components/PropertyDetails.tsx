@@ -60,7 +60,14 @@ const LineChart = ({ data }: LCProps) => {
   return (
     <div>
       <VictoryChart theme={VictoryTheme.material}>
-        <VictoryLine data={data} />
+        <VictoryLine
+          data={data}
+          style={{
+            data: {
+              stroke: '#1890ff',
+            },
+          }}
+        />
         <VictoryAxis dependentAxis />
         <VictoryAxis tickCount={3} />
       </VictoryChart>
