@@ -3,11 +3,13 @@ import moment from 'moment'
 import {
   Card,
   Drawer,
+  Modal,
   Input,
   InputNumber,
   Switch,
   Button,
   Result,
+  List,
   Tag,
   Divider,
   Statistic,
@@ -20,8 +22,7 @@ import {
   ApiOutlined,
 } from '@ant-design/icons'
 import { IValue, ICreatedAction, FormState, ISubmitAction } from '../api/types'
-import ActionDetails from './ActionDetails'
-import { create } from 'domain'
+import Timestamp from './Timestamp'
 
 type Props = {
   id: string
@@ -98,31 +99,19 @@ const ActionSubmit = ({ id, open, onClose, values, submitAction }: Props) => {
   console.log(createdAction)
 
   return (
-    <Drawer
+    <Modal
       title="Submit action"
-      placement="bottom"
-      height="80vh"
       visible={open}
-      onClose={onClose}
+      onCancel={onClose}
+      onOk={handleSubmit}
+      okText="Submit"
+      okButtonProps={{ loading }}
       footer={
-        <div
-          style={{
-            textAlign: 'right',
-          }}
-        >
-          {createdAction || error ? (
-            <Button onClick={onClose}>Close</Button>
-          ) : (
-            <>
-              <Button onClick={onClose} style={{ marginRight: 8 }}>
-                Cancel
-              </Button>
-              <Button onClick={handleSubmit} type="primary" loading={loading}>
-                Submit
-              </Button>
-            </>
-          )}
-        </div>
+        createdAction || error ? (
+          <Button onClick={onClose}>Close</Button>
+        ) : (
+          undefined
+        )
       }
     >
       <h4>Actions</h4>
@@ -133,17 +122,15 @@ const ActionSubmit = ({ id, open, onClose, values, submitAction }: Props) => {
           extra={
             createdAction && (
               <Card title="Action details">
-                <p>id: {createdAction.id}</p>
-                <p>
-                  created:{' '}
-                  {moment(createdAction.timestamp).format('YYYY-MM-DD H:mm:ss')}
-                </p>
-                <p>Value:</p>
-                <ul>
-                  {Object.keys(createdAction.value).map(k => (
-                    <li key={k}>{[k] + ': ' + createdAction.value[k]}</li>
-                  ))}
-                </ul>
+                <h4>ID: {createdAction.id}</h4>
+                <Timestamp date={createdAction.timestamp} />
+                <List
+                  header="Value"
+                  dataSource={Object.keys(createdAction.value).map(
+                    k => `${[k]}: ${createdAction.value[k]}`
+                  )}
+                  renderItem={item => <List.Item>{item}</List.Item>}
+                />
               </Card>
             )
           }
@@ -162,7 +149,7 @@ const ActionSubmit = ({ id, open, onClose, values, submitAction }: Props) => {
           )}
         </div>
       )}
-    </Drawer>
+    </Modal>
   )
 }
 

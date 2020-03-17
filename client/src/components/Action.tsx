@@ -1,11 +1,6 @@
 import React, { useState } from 'react'
 import { Card, Button, Tag, Divider, Statistic, Empty } from 'antd'
-import {
-  EyeFilled,
-  EditFilled,
-  InfoCircleTwoTone,
-  ApiOutlined,
-} from '@ant-design/icons'
+import { EyeFilled, EditFilled, InfoCircleTwoTone } from '@ant-design/icons'
 import { IValue, ICreatedAction, FormState, ISubmitAction } from '../api/types'
 import ActionDetails from './ActionDetails'
 import ActionSubmit from './ActionSubmit'
@@ -44,14 +39,14 @@ const Action = ({
       title={name || id}
       actions={[
         <Button onClick={handleToggleDetails} icon={<EyeFilled />}>
-          {showDetails ? 'Hide ' : 'Show '} latest actions
+          Latest actions
         </Button>,
         <Button
           type="primary"
           onClick={() => setShowSubmit(true)}
           icon={<EditFilled />}
         >
-          Submit action
+          New action
         </Button>,
       ]}
     >

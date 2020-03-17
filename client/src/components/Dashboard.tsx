@@ -2,9 +2,7 @@ import React, { useState } from 'react'
 import { Alert, Row, Col, Tabs, Empty } from 'antd'
 import useDashboard from './useDashboard'
 import Property from './Property'
-import PropertyDetails from './PropertyDetails'
 import Action from './Action'
-import ActionDetails from './ActionDetails'
 
 const { TabPane } = Tabs
 
