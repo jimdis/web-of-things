@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Alert, Row, Col, Tabs, Empty } from 'antd'
+import { Alert, Row, Col, Tabs, Empty, Spin } from 'antd'
 import useDashboard from './useDashboard'
 import Property from './Property'
 import Action from './Action'
@@ -10,11 +10,10 @@ const Dashboard = () => {
   const {
     model,
     properties,
-    propertyData,
-    actionData,
     fetchPropertyData,
     fetchActionData,
     submitAction,
+    loading,
     error,
     clearError,
   } = useDashboard()
@@ -51,48 +50,54 @@ const Dashboard = () => {
       <Tabs defaultActiveKey="1">
         <TabPane tab="Properties" key="1">
           <h2>Properties</h2>
-          <Row>
-            {propertyResources.length ? (
-              propertyResources.map(p => (
-                <Col key={p.id} xs={24} sm={12} md={8} lg={6}>
-                  <Property
-                    id={p.id}
-                    name={p.name}
-                    description={p.description}
-                    tags={p.tags}
-                    values={p.values}
-                    data={propertyData[p.id]}
-                    latestValues={getData(p.id)}
-                    fetchPropertyData={fetchPropertyData}
-                  />
-                </Col>
-              ))
-            ) : (
-              <Empty description="No properties found" />
-            )}
-          </Row>
+          {loading ? (
+            <Spin size="large" />
+          ) : (
+            <Row>
+              {propertyResources.length ? (
+                propertyResources.map(p => (
+                  <Col key={p.id} xs={24} sm={12} md={8} lg={6}>
+                    <Property
+                      id={p.id}
+                      name={p.name}
+                      description={p.description}
+                      tags={p.tags}
+                      values={p.values}
+                      latestValues={getData(p.id)}
+                      fetchPropertyData={fetchPropertyData}
+                    />
+                  </Col>
+                ))
+              ) : (
+                <Empty description="No properties found" />
+              )}
+            </Row>
+          )}
         </TabPane>
         <TabPane tab="Actions" key="2">
           <h2>Actions</h2>
-          <Row>
-            {actionResources.length ? (
-              actionResources.map(a => (
-                <Col key={a.id} xs={24} sm={12}>
-                  <Action
-                    id={a.id}
-                    name={a.name}
-                    description={a.description}
-                    values={a.values}
-                    data={actionData[a.id]}
-                    fetchActionData={fetchActionData}
-                    submitAction={submitAction}
-                  />
-                </Col>
-              ))
-            ) : (
-              <Empty description="No actions found" />
-            )}
-          </Row>
+          {loading ? (
+            <Spin size="large" />
+          ) : (
+            <Row>
+              {actionResources.length ? (
+                actionResources.map(a => (
+                  <Col key={a.id} xs={24} sm={12}>
+                    <Action
+                      id={a.id}
+                      name={a.name}
+                      description={a.description}
+                      values={a.values}
+                      fetchActionData={fetchActionData}
+                      submitAction={submitAction}
+                    />
+                  </Col>
+                ))
+              ) : (
+                <Empty description="No actions found" />
+              )}
+            </Row>
+          )}
         </TabPane>
       </Tabs>
     </div>

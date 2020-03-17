@@ -1,7 +1,9 @@
 import React from 'react'
 import moment from 'moment'
-import { VictoryTheme, VictoryLine, VictoryChart } from 'victory'
+import { VictoryTheme, VictoryLine, VictoryChart, VictoryAxis } from 'victory'
+import { List } from 'antd'
 import { CreatedValueType, IValue, ICreatedValue } from '../api/types'
+import Timestamp from './Timestamp'
 
 type Props = {
   values: Record<string, IValue>
@@ -19,27 +21,28 @@ const PropertyDetails = ({ values, data }: Props) => {
       y: d[key] as number,
     }))
 
-  const displayBoolean = (value: boolean) => (
-    <p>{value ? '\u2705' : '\u274C'}</p>
-  )
+  const displayBoolean = (value: boolean) => (value ? '\u2705' : '\u274C')
 
   return (
     <div>
+      <h4>Latest values</h4>
       {Object.keys(values).map(k => (
         <div key={k}>
           {typeof data[0][k] === 'number' ? (
             <LineChart data={createChartData(k)} />
           ) : (
-            <ul>
-              {data.map(d => (
-                <li key={d.timestamp}>
-                  {moment(d.timestamp).format('H:mm:ss')}:{' '}
-                  {typeof d[k] === 'boolean'
-                    ? displayBoolean(d[k] as boolean)
-                    : d[k]}
-                </li>
-              ))}
-            </ul>
+            <List
+              dataSource={data.map(d =>
+                typeof d[k] === 'boolean'
+                  ? displayBoolean(d[k] as boolean)
+                  : d[k]
+              )}
+              renderItem={(item, i) => (
+                <List.Item>
+                  <Timestamp date={data[i].timestamp} /> {item}
+                </List.Item>
+              )}
+            />
           )}
         </div>
       ))}
@@ -58,6 +61,8 @@ const LineChart = ({ data }: LCProps) => {
     <div>
       <VictoryChart theme={VictoryTheme.material}>
         <VictoryLine data={data} />
+        <VictoryAxis dependentAxis />
+        <VictoryAxis tickCount={3} />
       </VictoryChart>
     </div>
   )

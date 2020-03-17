@@ -1,5 +1,4 @@
 import React from 'react'
-import moment from 'moment'
 import { List, Empty } from 'antd'
 import { ICreatedAction, CreatedValueType } from '../api/types'
 import Timestamp from './Timestamp'

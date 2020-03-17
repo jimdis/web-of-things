@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Card, Button, Tag, Divider, Statistic, Empty } from 'antd'
+import { Card, Button, Tag, Divider, Statistic, Empty, Spin } from 'antd'
 import { EyeFilled, EditFilled, InfoCircleTwoTone } from '@ant-design/icons'
 import { IValue, ICreatedAction, FormState, ISubmitAction } from '../api/types'
 import ActionDetails from './ActionDetails'
@@ -10,8 +10,8 @@ type Props = {
   name?: string
   description?: string
   values?: Record<string, IValue>
-  data?: ICreatedAction[]
-  fetchActionData: (id: string) => void
+  // data?: ICreatedAction[]
+  fetchActionData: (id: string) => Promise<ICreatedAction[]>
   submitAction: (a: ISubmitAction) => Promise<ICreatedAction>
 }
 
@@ -20,18 +20,27 @@ const Action = ({
   name,
   description = 'No description provided',
   values,
-  data = [],
+  // data = [],
   fetchActionData,
   submitAction,
 }: Props) => {
+  const [data, setData] = useState<ICreatedAction[]>([])
+  const [loading, setLoading] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
   const [showSubmit, setShowSubmit] = useState(false)
 
-  const handleToggleDetails = () => {
-    if (!data.length) {
-      fetchActionData(id)
-    }
+  const handleToggleDetails = async () => {
     setShowDetails(!showDetails)
+    if (!data.length) {
+      try {
+        setLoading(true)
+        const actionData = await fetchActionData(id)
+        setData(actionData)
+        setLoading(false)
+      } catch (e) {
+        setLoading(false)
+      }
+    }
   }
 
   return (
@@ -56,7 +65,7 @@ const Action = ({
         </span>
         {description}
       </h4>
-      {showDetails && <ActionDetails data={data} />}
+      {showDetails ? loading ? <Spin /> : <ActionDetails data={data} /> : null}
       {showSubmit && values && (
         <ActionSubmit
           id={id}

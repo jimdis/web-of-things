@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import moment from 'moment'
-import { Button, Card, Tag, Divider, Statistic, Empty } from 'antd'
+import { Button, Card, Tag, Divider, Statistic, Empty, Spin } from 'antd'
 import { EyeFilled, CalendarTwoTone } from '@ant-design/icons'
 import { ICreatedValue, IValue, CreatedValueType } from '../api/types'
 import PropertyDetails from './PropertyDetails'
+import Timestamp from './Timestamp'
 
 type Props = {
   id: string
@@ -11,9 +12,8 @@ type Props = {
   description?: string
   tags?: string[]
   values?: Record<string, IValue>
-  data?: ICreatedValue[]
   latestValues?: ICreatedValue
-  fetchPropertyData: (id: string) => void
+  fetchPropertyData: (id: string) => Promise<ICreatedValue[]>
 }
 
 const Property = ({
@@ -22,17 +22,25 @@ const Property = ({
   description = 'No description provided',
   tags = [],
   values,
-  data = [],
   latestValues,
   fetchPropertyData,
 }: Props) => {
   const [showDetails, setShowDetails] = useState<boolean>(false)
+  const [data, setData] = useState<ICreatedValue[]>([])
+  const [loading, setLoading] = useState(false)
 
-  const handleToggleDetails = () => {
-    if (!data.length) {
-      fetchPropertyData(id)
-    }
+  const handleToggleDetails = async () => {
     setShowDetails(!showDetails)
+    if (!data.length) {
+      try {
+        setLoading(true)
+        const propertyData = await fetchPropertyData(id)
+        setData(propertyData)
+        setLoading(false)
+      } catch (e) {
+        setLoading(false)
+      }
+    }
   }
 
   const displayValue = (value: CreatedValueType) => {
@@ -71,15 +79,17 @@ const Property = ({
               suffix={values[key].unit}
             />
           ))}
-          <div>
-            <span style={{ marginRight: 8 }}>
-              <CalendarTwoTone />
-            </span>
-            <span>
-              {moment(latestValues.timestamp).format('YYYY-MM-DD H:mm:ss')}
-            </span>
-          </div>
-          {showDetails && <PropertyDetails values={values} data={data} />}
+          <Timestamp date={latestValues.timestamp} />
+          {showDetails ? (
+            <>
+              <Divider />
+              {loading ? (
+                <Spin />
+              ) : (
+                <PropertyDetails values={values} data={data} />
+              )}
+            </>
+          ) : null}
         </div>
       ) : (
         <Empty description="No Data Available" />
