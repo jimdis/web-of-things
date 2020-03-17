@@ -65,8 +65,9 @@ const useDashboard = () => {
     }
   }
 
-  const submitAction = (action: ISubmitAction) => {
-    postAction(action)
+  const submitAction = async (action: ISubmitAction) => {
+    const res = await postAction(action)
+    return res
   }
 
   return {

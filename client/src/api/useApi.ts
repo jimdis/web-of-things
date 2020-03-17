@@ -2,7 +2,14 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import parseLink, { Links } from 'parse-link-header'
-import { IEndpoints, IThing, IProperty, ISubmitAction } from './types'
+import {
+  IEndpoints,
+  IThing,
+  IProperty,
+  ISubmitAction,
+  ICreatedAction,
+} from './types'
+import { create } from 'domain'
 const BASE_URL =
   process.env.NODE_ENV === 'production'
     ? '!!!!!!!INSERT PROD URL HERE!!!!'
@@ -55,15 +62,17 @@ const useApi = () => {
         throw 'Endpoint does not exist'
       }
       const url = `${BASE_URL}${endpoints.actions.url}/${action.actionId}`
-      console.log(url)
       const res = await axios.post(url, action.formState, {
         headers: {
           'X-API-Key': '51dae9035fe242f7b252bed2b65dc33f',
         },
       })
-      console.log(res)
+      const location = res.headers.location
+      const createdAction = await fetchData(location)
+      return createdAction as ICreatedAction
     } catch (e) {
       setError(e.message)
+      return Promise.reject(e)
     }
   }
 

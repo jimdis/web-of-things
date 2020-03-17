@@ -40,7 +40,7 @@ const Dashboard = () => {
   const getData = (id: string) => properties.find(el => el.id === id)?.values
 
   return (
-    <Tabs defaultActiveKey="1">
+    <div>
       {error && (
         <Alert
           message={'Error: ' + error}
@@ -50,52 +50,54 @@ const Dashboard = () => {
           onClose={clearError}
         />
       )}
-      <TabPane tab="Properties" key="1">
-        <h2>Properties</h2>
-        <Row>
-          {propertyResources.length ? (
-            propertyResources.map(p => (
-              <Col key={p.id} xs={24} sm={12} md={8} lg={6}>
-                <Property
-                  id={p.id}
-                  name={p.name}
-                  description={p.description}
-                  tags={p.tags}
-                  values={p.values}
-                  data={propertyData[p.id]}
-                  latestValues={getData(p.id)}
-                  fetchPropertyData={fetchPropertyData}
-                />
-              </Col>
-            ))
-          ) : (
-            <Empty description="No properties found" />
-          )}
-        </Row>
-      </TabPane>
-      <TabPane tab="Actions" key="2">
-        <h2>Actions</h2>
-        <Row>
-          {actionResources.length ? (
-            actionResources.map(a => (
-              <Col key={a.id} xs={24} sm={12}>
-                <Action
-                  id={a.id}
-                  name={a.name}
-                  description={a.description}
-                  values={a.values}
-                  data={actionData[a.id]}
-                  fetchActionData={fetchActionData}
-                  submitAction={submitAction}
-                />
-              </Col>
-            ))
-          ) : (
-            <Empty description="No actions found" />
-          )}
-        </Row>
-      </TabPane>
-    </Tabs>
+      <Tabs defaultActiveKey="1">
+        <TabPane tab="Properties" key="1">
+          <h2>Properties</h2>
+          <Row>
+            {propertyResources.length ? (
+              propertyResources.map(p => (
+                <Col key={p.id} xs={24} sm={12} md={8} lg={6}>
+                  <Property
+                    id={p.id}
+                    name={p.name}
+                    description={p.description}
+                    tags={p.tags}
+                    values={p.values}
+                    data={propertyData[p.id]}
+                    latestValues={getData(p.id)}
+                    fetchPropertyData={fetchPropertyData}
+                  />
+                </Col>
+              ))
+            ) : (
+              <Empty description="No properties found" />
+            )}
+          </Row>
+        </TabPane>
+        <TabPane tab="Actions" key="2">
+          <h2>Actions</h2>
+          <Row>
+            {actionResources.length ? (
+              actionResources.map(a => (
+                <Col key={a.id} xs={24} sm={12}>
+                  <Action
+                    id={a.id}
+                    name={a.name}
+                    description={a.description}
+                    values={a.values}
+                    data={actionData[a.id]}
+                    fetchActionData={fetchActionData}
+                    submitAction={submitAction}
+                  />
+                </Col>
+              ))
+            ) : (
+              <Empty description="No actions found" />
+            )}
+          </Row>
+        </TabPane>
+      </Tabs>
+    </div>
   )
 }
 
