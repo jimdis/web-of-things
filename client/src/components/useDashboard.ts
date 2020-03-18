@@ -4,8 +4,20 @@ import {
   ICreatedValue,
   ICreatedAction,
   ISubmitAction,
+  IValue,
 } from '../api/types'
 import useApi from '../api/useApi'
+
+export interface IResource {
+  id: string
+  name?: string
+  description?: string
+  tags?: string[]
+  endpoint: string
+  values?: {
+    [k: string]: IValue
+  }
+}
 
 const useDashboard = () => {
   const [loading, setLoading] = useState(true)

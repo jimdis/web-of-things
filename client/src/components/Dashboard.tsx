@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Alert, Row, Col, Tabs, Empty, Spin } from 'antd'
-import useDashboard from './useDashboard'
+import useDashboard, { IResource } from './useDashboard'
 import Property from './Property'
 import Action from './Action'
 
@@ -18,17 +18,22 @@ const Dashboard = () => {
     clearError,
   } = useDashboard()
 
-  const mapResourceToModel = (resourceKey: 'properties' | 'actions') => {
+  const mapResourceToModel = (
+    resourceKey: 'properties' | 'actions'
+  ): IResource[] => {
     const resources = model?.links?.[resourceKey]?.resources
-    return resources
-      ? Object.keys(resources).map(k => ({
-          id: k,
-          name: resources[k].name as string | undefined,
-          description: resources[k].description as string | undefined,
-          tags: resources[k].tags as string[] | undefined,
-          values: resources[k].values,
-        }))
-      : []
+    const link = model?.links?.[resourceKey]?.link
+    if (!resources || !link) {
+      return []
+    }
+    return Object.keys(resources).map(k => ({
+      id: k,
+      endpoint: link + '/' + k,
+      name: resources[k].name as string | undefined,
+      description: resources[k].description as string | undefined,
+      tags: resources[k].tags as string[] | undefined,
+      values: resources[k].values,
+    }))
   }
 
   const propertyResources = mapResourceToModel('properties')
@@ -58,11 +63,7 @@ const Dashboard = () => {
                 propertyResources.map(p => (
                   <Col key={p.id} xs={24} sm={12} md={8} lg={6}>
                     <Property
-                      id={p.id}
-                      name={p.name}
-                      description={p.description}
-                      tags={p.tags}
-                      values={p.values}
+                      resource={p}
                       latestValues={getData(p.id)}
                       fetchPropertyData={fetchPropertyData}
                     />
@@ -84,10 +85,7 @@ const Dashboard = () => {
                 actionResources.map(a => (
                   <Col key={a.id} xs={24} sm={12}>
                     <Action
-                      id={a.id}
-                      name={a.name}
-                      description={a.description}
-                      values={a.values}
+                      resource={a}
                       fetchActionData={fetchActionData}
                       submitAction={submitAction}
                     />

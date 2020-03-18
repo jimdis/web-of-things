@@ -3,31 +3,35 @@ import moment from 'moment'
 import { Button, Card, Tag, Divider, Statistic, Empty, Spin } from 'antd'
 import { EyeFilled, CalendarTwoTone } from '@ant-design/icons'
 import { ICreatedValue, IValue, CreatedValueType } from '../api/types'
+import { IResource } from './useDashboard'
+import useWs from '../api/useWs'
 import PropertyDetails from './PropertyDetails'
 import Timestamp from './Timestamp'
 
 type Props = {
-  id: string
-  name?: string
-  description?: string
-  tags?: string[]
-  values?: Record<string, IValue>
+  resource: IResource
   latestValues?: ICreatedValue
   fetchPropertyData: (id: string) => Promise<ICreatedValue[]>
 }
 
-const Property = ({
-  id,
-  name,
-  description = 'No description provided',
-  tags = [],
-  values,
-  latestValues,
-  fetchPropertyData,
-}: Props) => {
+const Property = ({ resource, latestValues, fetchPropertyData }: Props) => {
   const [showDetails, setShowDetails] = useState<boolean>(false)
   const [data, setData] = useState<ICreatedValue[]>([])
   const [loading, setLoading] = useState(false)
+
+  const {
+    id,
+    name,
+    description = 'No description provided',
+    tags = [],
+    values,
+    endpoint,
+  } = resource
+
+  const { connectionStatus, latestData } = useWs(endpoint)
+
+  console.log(connectionStatus)
+  console.log(latestData)
 
   const handleToggleDetails = async () => {
     setShowDetails(!showDetails)

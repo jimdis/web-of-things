@@ -63,6 +63,7 @@ module.exports.sendMessage = message => {
     //Simulate 1s delay
     setTimeout(() => {
       actionObject.status = 'completed'
+      emitter.emit('sendMessage', actionObject)
       updateDataArray(propertyResource.data, {
         [valueName]: message,
         timestamp,
@@ -79,6 +80,7 @@ module.exports.sendMessage = message => {
         console.error(err)
       } else {
         actionObject.status = 'completed'
+        emitter.emit('sendMessage', actionObject)
         updateDataArray(propertyResource.data, {
           [valueName]: data[0],
           timestamp,
@@ -86,7 +88,7 @@ module.exports.sendMessage = message => {
       }
     })
   }
-  emitter.emit('action', actionObject)
+  emitter.emit('sendMessage', actionObject)
   return actionObject
 }
 

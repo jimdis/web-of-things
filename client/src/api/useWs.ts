@@ -3,10 +3,9 @@ import useWebSocket, { ReadyState } from 'react-use-websocket'
 import { API_URL } from '../config'
 
 const useWs = (endpoint: string) => {
-  const [messageHistory, setMessageHistory] = useState<any[]>([])
+  const [messageHistory, setMessageHistory] = useState<{}[]>([])
   const [sendMessage, lastMessage, readyState, getWebSocket] = useWebSocket(
-    API_URL.replace('https://', 'wss://').replace('http://', 'wss://') +
-      endpoint
+    API_URL.replace('http://', 'ws://').replace('https://', 'wss://') + endpoint
   )
 
   useEffect(() => {
@@ -14,7 +13,7 @@ const useWs = (endpoint: string) => {
       const currentWebsocketUrl = getWebSocket().url
       console.log('received a message from ', currentWebsocketUrl)
 
-      setMessageHistory([...messageHistory, lastMessage])
+      setMessageHistory([...messageHistory, JSON.parse(lastMessage.data)])
     }
   }, [lastMessage])
 
@@ -24,7 +23,10 @@ const useWs = (endpoint: string) => {
     [ReadyState.CLOSING]: 'Closing',
     [ReadyState.CLOSED]: 'Closed',
   }[readyState]
-  return { connectionStatus, messageHistory }
+  return {
+    connectionStatus,
+    latestData: messageHistory[messageHistory.length - 1],
+  }
 }
 
 export default useWs

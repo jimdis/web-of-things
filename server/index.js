@@ -7,12 +7,12 @@ const cors = require('cors')
 const morgan = require('morgan')
 const WebSocketServer = require('ws').Server
 const app = express()
-const url = require('url')
 const emitter = require('./lib/modelEmitter')
 const response = require('./middleware/response')
 const errors = require('./middleware/errors')
 const runScripts = require('./lib/runScripts')
 const ngrok = require('./lib/ngrok')
+const model = require('./model')
 
 // Start collecting data from sensors
 runScripts.collectData()
@@ -52,12 +52,16 @@ const wss = new WebSocketServer({ server })
 console.info('WebSocket server started...')
 
 server.listen(port, () => console.log(`Server listening on port ${port}`))
-wss.on('connection', ws => {
-  const reqUrl = url.parse(ws.upgradeReq.url, true)
-  console.log(reqUrl.pathname)
+wss.on('connection', (ws, req) => {
+  const urlParts = req.url.split('/').slice(1)
+  const [link, id] = urlParts
+  Object.keys(model.links).forEach(key => {
+    const resource = model.links[key]
+    if (resource.link === '/' + link) {
+      emitter.on(id, payload => ws.send(JSON.stringify(payload)))
+    }
+  })
 })
-
-emitter.on('action', action => console.log(action))
 
 if (process.env.NODE_ENV === 'production') {
   ngrok.connect(port)

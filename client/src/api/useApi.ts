@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import parseLink, { Links } from 'parse-link-header'
 import { IThing, ISubmitAction, ICreatedAction } from './types'
-import { API_URL as BASE_URL } from '../config'
+import { API_URL as BASE_URL, API_URL } from '../config'
 
 const useApi = () => {
   const [error, setError] = useState<String | null>(null)
