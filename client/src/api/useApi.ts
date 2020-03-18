@@ -2,18 +2,8 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import parseLink, { Links } from 'parse-link-header'
-import {
-  IEndpoints,
-  IThing,
-  IProperty,
-  ISubmitAction,
-  ICreatedAction,
-} from './types'
-import { create } from 'domain'
-const BASE_URL =
-  process.env.NODE_ENV === 'production'
-    ? '!!!!!!!INSERT PROD URL HERE!!!!'
-    : 'http://localhost:5000'
+import { IThing, ISubmitAction, ICreatedAction } from './types'
+import { API_URL as BASE_URL } from '../config'
 
 const useApi = () => {
   const [error, setError] = useState<String | null>(null)

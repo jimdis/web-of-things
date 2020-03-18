@@ -6,6 +6,7 @@
 const { PythonShell } = require('python-shell')
 const shortid = require('shortid')
 const model = require('../model')
+const emitter = require('../lib/modelEmitter')
 
 /**
  * Gets values from Sense HAT
@@ -85,6 +86,7 @@ module.exports.sendMessage = message => {
       }
     })
   }
+  emitter.emit('action', actionObject)
   return actionObject
 }
 
