@@ -84,10 +84,6 @@ export interface ICreatedValue {
 
 export type CreatedValueType = number | boolean | string
 
-export interface IProperty extends IThing {
-  values: ICreatedValue
-}
-
 // http://model.webofthings.io/#retrieve-recent-executions-of-a-specific-action
 export interface ICreatedAction extends IThing {
   timestamp: string

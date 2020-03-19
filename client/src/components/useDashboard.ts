@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import {
-  IProperty,
   ICreatedValue,
   ICreatedAction,
   ISubmitAction,
@@ -21,7 +20,6 @@ export interface IResource {
 
 const useDashboard = () => {
   const [loading, setLoading] = useState(true)
-  const [properties, setProperties] = useState<IProperty[]>([])
 
   const {
     endpoints,
@@ -33,22 +31,10 @@ const useDashboard = () => {
   } = useApi()
 
   useEffect(() => {
-    if (model && properties) {
+    if (model) {
       setLoading(false)
     }
-  }, [model, properties])
-
-  useEffect(() => {
-    const fetchProperties = async () => {
-      if (endpoints?.properties) {
-        const data = (await fetchData(endpoints.properties.url)) as
-          | IProperty[]
-          | undefined
-        setProperties(data ?? [])
-      }
-    }
-    fetchProperties()
-  }, [endpoints])
+  }, [model])
 
   const fetchPropertyData = async (id: string) => {
     try {
@@ -92,7 +78,6 @@ const useDashboard = () => {
   return {
     loading,
     model,
-    properties,
     fetchPropertyData,
     fetchActionData,
     submitAction,

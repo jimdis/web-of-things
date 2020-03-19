@@ -58,16 +58,19 @@ module.exports.sendMessage = message => {
     timestamp,
   }
   updateDataArray(actionResource.data, actionObject)
+  emitter.emit('sendMessage', actionObject)
 
   if (process.env.NODE_ENV !== 'production') {
     //Simulate 1s delay
     setTimeout(() => {
       actionObject.status = 'completed'
       emitter.emit('sendMessage', actionObject)
-      updateDataArray(propertyResource.data, {
+      const resourceObj = {
         [valueName]: message,
         timestamp,
-      })
+      }
+      updateDataArray(propertyResource.data, resourceObj)
+      emitter.emit('leds', resourceObj)
     }, 1000)
   } else {
     const options = {
@@ -81,14 +84,15 @@ module.exports.sendMessage = message => {
       } else {
         actionObject.status = 'completed'
         emitter.emit('sendMessage', actionObject)
-        updateDataArray(propertyResource.data, {
+        const resourceObj = {
           [valueName]: data[0],
           timestamp,
-        })
+        }
+        updateDataArray(propertyResource.data, resourceObj)
+        emitter.emit('leds', resourceObj)
       }
     })
   }
-  emitter.emit('sendMessage', actionObject)
   return actionObject
 }
 
@@ -96,7 +100,7 @@ module.exports.sendMessage = message => {
  * Start collecting data from Sense HAT and write to model at selected interval
  * @param {number} interval Collect data every n seconds.
  */
-module.exports.collectData = (interval = 60) => {
+module.exports.collectData = (interval = 10) => {
   const updateSensorData = async () => {
     try {
       const [temperature, humidity, pressure] = await getSensorValues()

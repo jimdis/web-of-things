@@ -1,9 +1,9 @@
 import React from 'react'
 import moment from 'moment'
-import { VictoryTheme, VictoryLine, VictoryChart, VictoryAxis } from 'victory'
 import { List } from 'antd'
-import { CreatedValueType, IValue, ICreatedValue } from '../api/types'
+import { IValue, ICreatedValue } from '../api/types'
 import Timestamp from './Timestamp'
+import LineChart from './LineChart'
 
 type Props = {
   values: Record<string, IValue>
@@ -48,32 +48,6 @@ const PropertyDetails = ({ values, data }: Props) => {
           )}
         </div>
       ))}
-    </div>
-  )
-}
-
-type LCProps = {
-  data: {
-    x: string
-    y: number
-  }[]
-}
-const LineChart = ({ data }: LCProps) => {
-  console.log('LC DATA', data)
-  return (
-    <div>
-      <VictoryChart theme={VictoryTheme.material}>
-        <VictoryLine
-          data={data}
-          style={{
-            data: {
-              stroke: '#1890ff',
-            },
-          }}
-        />
-        <VictoryAxis dependentAxis />
-        <VictoryAxis tickCount={3} />
-      </VictoryChart>
     </div>
   )
 }

@@ -9,7 +9,6 @@ const { TabPane } = Tabs
 const Dashboard = () => {
   const {
     model,
-    properties,
     fetchPropertyData,
     fetchActionData,
     submitAction,
@@ -39,8 +38,6 @@ const Dashboard = () => {
   const propertyResources = mapResourceToModel('properties')
   const actionResources = mapResourceToModel('actions')
 
-  const getData = (id: string) => properties.find(el => el.id === id)?.values
-
   return (
     <div>
       {error && (
@@ -64,7 +61,6 @@ const Dashboard = () => {
                   <Col key={p.id} xs={24} sm={12} md={8} lg={6}>
                     <Property
                       resource={p}
-                      latestValues={getData(p.id)}
                       fetchPropertyData={fetchPropertyData}
                     />
                   </Col>

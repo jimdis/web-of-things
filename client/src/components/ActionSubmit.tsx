@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import {
   Card,
-  Drawer,
   Modal,
   Input,
   InputNumber,
@@ -9,17 +8,7 @@ import {
   Button,
   Result,
   List,
-  Tag,
-  Divider,
-  Statistic,
-  Empty,
 } from 'antd'
-import {
-  EyeFilled,
-  EditFilled,
-  InfoCircleTwoTone,
-  ApiOutlined,
-} from '@ant-design/icons'
 import { IValue, ICreatedAction, FormState, ISubmitAction } from '../api/types'
 import Timestamp from './Timestamp'
 
@@ -75,6 +64,7 @@ const ActionSubmit = ({ id, open, onClose, values, submitAction }: Props) => {
     if (value?.type === 'float' || value?.type === 'integer') {
       return (
         <InputNumber
+          autoFocus
           id={id}
           min={value?.minValue ?? 0}
           max={value?.maxValue ?? 100}
@@ -87,6 +77,7 @@ const ActionSubmit = ({ id, open, onClose, values, submitAction }: Props) => {
     if (value?.type === 'string') {
       return (
         <Input
+          autoFocus
           id={id}
           value={(formState[id] as string) ?? ''}
           onChange={handleChange}

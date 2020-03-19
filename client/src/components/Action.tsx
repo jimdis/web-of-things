@@ -26,12 +26,15 @@ const Action = ({ resource, fetchActionData, submitAction }: Props) => {
     endpoint,
   } = resource
 
-  const { connectionStatus, latestData } = useWs(endpoint)
+  const ws = useWs(endpoint)
+
+  const latestData = ws.latestData as ICreatedAction
+
+  const connectionStatus = ws.connectionStatus()
 
   useEffect(() => {
     if (latestData) {
-      const action = latestData as ICreatedAction
-      setData([action, ...data.filter(d => d.id !== action.id)])
+      setData([latestData, ...data.filter(d => d.id !== latestData.id)])
     }
   }, [latestData])
 

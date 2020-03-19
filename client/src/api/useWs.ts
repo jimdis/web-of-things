@@ -17,12 +17,19 @@ const useWs = (endpoint: string) => {
     }
   }, [lastMessage])
 
-  const connectionStatus = {
-    [ReadyState.CONNECTING]: 'Connecting',
-    [ReadyState.OPEN]: 'Open',
-    [ReadyState.CLOSING]: 'Closing',
-    [ReadyState.CLOSED]: 'Closed',
-  }[readyState]
+  const connectionStatus = () => {
+    switch (readyState) {
+      case ReadyState.CONNECTING:
+        return 'Connecting'
+      case ReadyState.OPEN:
+        return 'Open'
+      case ReadyState.CLOSING:
+        return 'Closing'
+      case ReadyState.CLOSED:
+        return 'Closed'
+    }
+  }
+
   return {
     connectionStatus,
     latestData: messageHistory[messageHistory.length - 1],
