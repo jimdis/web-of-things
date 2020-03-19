@@ -113,10 +113,12 @@ module.exports.collectData = (interval = 60) => {
         const resource = model.links.properties.resources[key]
         const valueName = Object.keys(resource.values)[0]
         const timestamp = new Date().toISOString()
-        updateDataArray(resource.data, {
+        const valueObj = {
           [valueName]: value,
           timestamp,
-        })
+        }
+        emitter.emit(key, valueObj)
+        updateDataArray(resource.data, valueObj)
       })
       setTimeout(updateSensorData, interval * 1000)
     } catch (e) {

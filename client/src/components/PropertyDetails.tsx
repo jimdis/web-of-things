@@ -16,10 +16,12 @@ const PropertyDetails = ({ values, data }: Props) => {
   }
 
   const createChartData = (key: string) =>
-    data.map(d => ({
-      x: moment(d.timestamp).format('H:mm:ss'),
-      y: d[key] as number,
-    }))
+    data
+      .sort((a, b) => (moment(a.timestamp).isBefore(b.timestamp) ? -1 : 1))
+      .map(d => ({
+        x: moment(d.timestamp).format('H:mm:ss'),
+        y: d[key] as number,
+      }))
 
   const displayBoolean = (value: boolean) => (value ? '\u2705' : '\u274C')
 
@@ -57,6 +59,7 @@ type LCProps = {
   }[]
 }
 const LineChart = ({ data }: LCProps) => {
+  console.log('LC DATA', data)
   return (
     <div>
       <VictoryChart theme={VictoryTheme.material}>

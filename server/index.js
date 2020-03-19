@@ -58,6 +58,7 @@ wss.on('connection', (ws, req) => {
   Object.keys(model.links).forEach(key => {
     const resource = model.links[key]
     if (resource.link === '/' + link) {
+      console.log(id)
       emitter.on(id, payload => ws.send(JSON.stringify(payload)))
     }
   })

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import moment from 'moment'
 import { Button, Card, Tag, Divider, Statistic, Empty, Spin } from 'antd'
 import { EyeFilled, CalendarTwoTone } from '@ant-design/icons'
@@ -28,22 +28,35 @@ const Property = ({ resource, latestValues, fetchPropertyData }: Props) => {
     endpoint,
   } = resource
 
-  const { connectionStatus, latestData } = useWs(endpoint)
+  const { connectionStatus, latestData } = useWs(endpoint) as {
+    connectionStatus: string
+    latestData: ICreatedValue
+  }
 
   console.log(connectionStatus)
   console.log(latestData)
 
+  useEffect(() => {
+    if (latestData) {
+      setData(
+        [...data, latestData].sort((a, b) =>
+          moment(a.timestamp).isBefore(b.timestamp) ? -1 : 1
+        )
+      )
+    }
+  }, [latestData])
+
+  console.log(data)
+
   const handleToggleDetails = async () => {
     setShowDetails(!showDetails)
-    if (!data.length) {
-      try {
-        setLoading(true)
-        const propertyData = await fetchPropertyData(id)
-        setData(propertyData)
-        setLoading(false)
-      } catch (e) {
-        setLoading(false)
-      }
+    try {
+      setLoading(true)
+      const propertyData = await fetchPropertyData(id)
+      setData(propertyData)
+      setLoading(false)
+    } catch (e) {
+      setLoading(false)
     }
   }
 
@@ -79,11 +92,11 @@ const Property = ({ resource, latestValues, fetchPropertyData }: Props) => {
             <Statistic
               key={key}
               title={values[key].name}
-              value={displayValue(latestValues[key])}
+              value={displayValue(latestData?.[key] ?? latestValues[key])}
               suffix={values[key].unit}
             />
           ))}
-          <Timestamp date={latestValues.timestamp} />
+          <Timestamp date={latestData?.timestamp ?? latestValues.timestamp} />
           {showDetails ? (
             <>
               <Divider />

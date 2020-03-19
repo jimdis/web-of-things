@@ -40,15 +40,13 @@ const Action = ({ resource, fetchActionData, submitAction }: Props) => {
 
   const handleToggleDetails = async () => {
     setShowDetails(!showDetails)
-    if (!data.length) {
-      try {
-        setLoading(true)
-        const actionData = await fetchActionData(id)
-        setData(actionData)
-        setLoading(false)
-      } catch (e) {
-        setLoading(false)
-      }
+    try {
+      setLoading(true)
+      const actionData = await fetchActionData(id)
+      setData(actionData)
+      setLoading(false)
+    } catch (e) {
+      setLoading(false)
     }
   }
 
