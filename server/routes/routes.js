@@ -117,10 +117,14 @@ router
         error.statusCode = 400
         return next(error)
       }
-      const { id } = runScripts.sendMessage(message)
-      res.location(req.originalUrl + '/' + id)
+      try {
+        const { id } = runScripts.sendMessage(message)
+        res.location(req.originalUrl + '/' + id)
+        return res.status(201).send()
+      } catch (e) {
+        return next(e)
+      }
     }
-    return res.status(201).send()
   })
   .get((req, res, next) => {
     const resource = actions.resources[req.params.actionType]

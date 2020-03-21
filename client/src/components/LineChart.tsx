@@ -8,9 +8,14 @@ type LCProps = {
   }[]
 }
 const LineChart = ({ data }: LCProps) => {
+  let domain
   return (
     <div>
-      <VictoryChart theme={VictoryTheme.material} animate>
+      <VictoryChart
+        theme={VictoryTheme.material}
+        domainPadding={{ y: 10 }}
+        animate
+      >
         <VictoryLine
           data={data}
           style={{

@@ -1,12 +1,33 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import useWebSocket, { ReadyState } from 'react-use-websocket'
 import { API_URL } from '../config'
 
 const useWs = (endpoint: string) => {
+  const didUnmount = useRef(false)
+
+  const options = useMemo(
+    () => ({
+      shouldReconnect: () => {
+        return didUnmount.current === false
+      },
+      reconnectAttempts: 10,
+      reconnectInterval: 3000,
+    }),
+    []
+  )
+
   const [messageHistory, setMessageHistory] = useState<{}[]>([])
   const [_, lastMessage, readyState] = useWebSocket(
-    API_URL.replace('http://', 'ws://').replace('https://', 'wss://') + endpoint
+    API_URL.replace('http://', 'ws://').replace('https://', 'wss://') +
+      endpoint,
+    options
   )
+
+  useEffect(() => {
+    return () => {
+      didUnmount.current = true
+    }
+  })
 
   useEffect(() => {
     if (lastMessage !== null) {
