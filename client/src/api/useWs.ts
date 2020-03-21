@@ -10,7 +10,7 @@ const useWs = (endpoint: string) => {
 
   useEffect(() => {
     if (lastMessage !== null) {
-      setMessageHistory([...messageHistory, JSON.parse(lastMessage.data)])
+      setMessageHistory(m => [...m, JSON.parse(lastMessage.data)])
     }
   }, [lastMessage])
 

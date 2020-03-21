@@ -1,4 +1,3 @@
-//TODO: Add base url
 import { useState, useEffect } from 'react'
 import ax from 'axios'
 import parseLink, { Links } from 'parse-link-header'
