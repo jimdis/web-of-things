@@ -11,16 +11,13 @@ import {
   Spin,
   Tooltip,
 } from 'antd'
-import {
-  EyeFilled,
-  CheckCircleFilled,
-  InfoCircleTwoTone,
-} from '@ant-design/icons'
+import { EyeFilled, InfoCircleTwoTone } from '@ant-design/icons'
 import { ICreatedValue, CreatedValueType } from '../api/types'
 import { IResource } from './useDashboard'
 import useWs from '../api/useWs'
 import PropertyDetails from './PropertyDetails'
 import Timestamp from './Timestamp'
+import LiveIcon from './LiveIcon'
 
 type Props = {
   resource: IResource
@@ -63,34 +60,20 @@ const Property = ({ resource, fetchPropertyData }: Props) => {
     } catch (e) {
       setLoading(false)
     }
-  }, [])
+  }, [fetchPropertyData, id])
 
   useEffect(() => {
-    if (latestData) {
-      setData(
-        [...data, latestData].sort((a, b) =>
+    if (latestData?.timestamp) {
+      setData(d =>
+        [...d, latestData].sort((a, b) =>
           moment(a.timestamp).isBefore(b.timestamp) ? 1 : -1
         )
       )
     }
   }, [latestData])
 
-  console.log(data)
-
   return (
     <Card
-      title={
-        <div style={{ display: 'flex' }}>
-          <span style={{ flex: 1 }}>{name || id}</span>
-          {connectionStatus === 'Open' && (
-            <span>
-              <Tooltip title="Live updates enabled">
-                <CheckCircleFilled style={{ color: 'green' }} />
-              </Tooltip>
-            </span>
-          )}
-        </div>
-      }
       actions={[
         <Button
           onClick={() => setShowDetails(!showDetails)}
@@ -100,7 +83,24 @@ const Property = ({ resource, fetchPropertyData }: Props) => {
         </Button>,
       ]}
     >
-      <h4>{description}</h4>
+      <Card.Meta
+        title={
+          <div style={{ display: 'flex' }}>
+            <span style={{ flex: 1 }}>{name || id}</span>
+            <LiveIcon
+              status={
+                connectionStatus === 'Open'
+                  ? 'active'
+                  : connectionStatus === 'Connecting'
+                  ? 'connecting'
+                  : 'inactive'
+              }
+            />
+          </div>
+        }
+        description={description}
+        style={{ marginBottom: 8 }}
+      />
       {tags.map((tag, i) => (
         <Tag color="blue" key={tag + i}>
           {tag}

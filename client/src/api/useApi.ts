@@ -1,9 +1,14 @@
 //TODO: Add base url
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import ax from 'axios'
 import parseLink, { Links } from 'parse-link-header'
 import { IThing, ISubmitAction, ICreatedAction } from './types'
-import { API_URL as BASE_URL, API_URL } from '../config'
+import { API_URL } from '../config'
+
+const axios = ax.create({
+  baseURL: API_URL + '/',
+  headers: { Accept: 'application/json' },
+})
 
 const useApi = () => {
   const [error, setError] = useState<String | null>(null)
@@ -13,7 +18,7 @@ const useApi = () => {
   useEffect(() => {
     const fetchLinks = async () => {
       try {
-        const res = await axios.get(BASE_URL)
+        const res = await axios.get('')
         const links = parseLink(res.headers.link)
         setEndpoints(links)
       } catch (e) {
@@ -24,22 +29,45 @@ const useApi = () => {
   }, [])
 
   useEffect(() => {
-    const fetchModel = async (url: string) => {
+    const fetchModel = async (endpoint: string) => {
       try {
-        const { data } = await axios.get<IThing>(url)
+        const { data } = await axios.get<IThing>(endpoint)
+        // In case root url failed to provide endpoint links
+        if (
+          !endpoints &&
+          data?.links?.properties?.link &&
+          data?.links?.actions?.link
+        ) {
+          setEndpoints({
+            model: {
+              rel: 'model',
+              url: endpoint,
+            },
+            properties: {
+              rel: 'properties',
+              url: data.links.properties.link,
+            },
+            actions: {
+              rel: 'actions',
+              url: data.links.actions.link,
+            },
+          })
+        }
         setModel(data)
       } catch (e) {
         setError(e.message)
       }
     }
     if (endpoints?.model) {
-      fetchModel(BASE_URL + endpoints.model.url)
+      fetchModel(endpoints.model.url)
+    } else {
+      fetchModel('/model') // in case root URL did not return links.. try /model
     }
   }, [endpoints])
 
   const fetchData = async (endpoint: string) => {
     try {
-      const { data } = await axios.get(BASE_URL + endpoint)
+      const { data } = await axios.get(endpoint)
       return data
     } catch (e) {
       setError(e.message)
@@ -49,15 +77,18 @@ const useApi = () => {
   const postAction = async (action: ISubmitAction) => {
     try {
       if (!endpoints?.actions) {
-        throw 'Endpoint does not exist'
+        throw new Error('Endpoint does not exist')
       }
-      const url = `${BASE_URL}${endpoints.actions.url}/${action.actionId}`
+      const url = `${endpoints.actions.url}/${action.actionId}`
       const res = await axios.post(url, action.formState, {
         headers: {
           'X-API-Key': '51dae9035fe242f7b252bed2b65dc33f',
         },
       })
       const location = res.headers.location
+      if (!location) {
+        throw new Error('Did not receive location of new action')
+      }
       const createdAction = await fetchData(location)
       return createdAction as ICreatedAction
     } catch (e) {

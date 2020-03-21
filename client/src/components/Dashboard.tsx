@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Alert, Row, Col, Tabs, Empty, Spin } from 'antd'
 import useDashboard, { IResource } from './useDashboard'
 import Property from './Property'
 import Action from './Action'
+import About from './About'
 
 const { TabPane } = Tabs
 
@@ -91,6 +92,20 @@ const Dashboard = () => {
                 <Empty description="No actions found" />
               )}
             </Row>
+          )}
+        </TabPane>
+        <TabPane tab="About" key="3">
+          <h2>About this Webthing</h2>
+          {loading ? (
+            <Spin size="large" />
+          ) : model ? (
+            <Row>
+              <Col xs={24} sm={12} md={8} lg={6}>
+                <About thing={model} />
+              </Col>
+            </Row>
+          ) : (
+            <Empty description="No description available" />
           )}
         </TabPane>
       </Tabs>

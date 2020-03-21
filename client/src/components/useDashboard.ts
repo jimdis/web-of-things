@@ -36,6 +36,12 @@ const useDashboard = () => {
     }
   }, [model])
 
+  useEffect(() => {
+    if (error) {
+      setLoading(false)
+    }
+  }, [error])
+
   const fetchPropertyData = async (id: string) => {
     try {
       if (!endpoints?.properties) {

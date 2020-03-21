@@ -34,10 +34,13 @@ const PropertyDetails = ({ values, data }: Props) => {
             <LineChart data={createChartData(k)} />
           ) : (
             <List
-              dataSource={data.map(d =>
-                typeof d[k] === 'boolean'
-                  ? displayBoolean(d[k] as boolean)
-                  : d[k]
+              dataSource={data.map(
+                d =>
+                  `${k}: ${
+                    typeof d[k] === 'boolean'
+                      ? displayBoolean(d[k] as boolean)
+                      : d[k]
+                  }`
               )}
               renderItem={(item, i) => (
                 <List.Item>

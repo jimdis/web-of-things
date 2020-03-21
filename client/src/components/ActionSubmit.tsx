@@ -13,6 +13,7 @@ import { IValue, ICreatedAction, FormState, ISubmitAction } from '../api/types'
 import Timestamp from './Timestamp'
 
 type Props = {
+  title: string
   id: string
   open: boolean
   onClose: () => void
@@ -20,7 +21,14 @@ type Props = {
   submitAction: (a: ISubmitAction) => Promise<ICreatedAction>
 }
 
-const ActionSubmit = ({ id, open, onClose, values, submitAction }: Props) => {
+const ActionSubmit = ({
+  title,
+  id,
+  open,
+  onClose,
+  values,
+  submitAction,
+}: Props) => {
   const [formState, setFormState] = useState<FormState>({})
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
@@ -86,8 +94,6 @@ const ActionSubmit = ({ id, open, onClose, values, submitAction }: Props) => {
     }
   }
 
-  console.log(createdAction)
-
   return (
     <Modal
       title="Submit action"
@@ -104,7 +110,6 @@ const ActionSubmit = ({ id, open, onClose, values, submitAction }: Props) => {
         )
       }
     >
-      <h4>Actions</h4>
       {createdAction || error ? (
         <Result
           status={error ? 'error' : 'success'}
@@ -131,6 +136,7 @@ const ActionSubmit = ({ id, open, onClose, values, submitAction }: Props) => {
             key =>
               values[key].required && (
                 <div key={key}>
+                  <h4>{title}</h4>
                   <p>{values[key].name}</p>
                   <p>{values[key].description}</p>
                   {renderInput(key)}
