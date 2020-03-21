@@ -5,7 +5,7 @@ import { IThing, ISubmitAction, ICreatedAction } from './types'
 import { API_URL } from '../config'
 
 const axios = ax.create({
-  baseURL: API_URL + '/',
+  baseURL: API_URL,
   headers: { Accept: 'application/json' },
 })
 
