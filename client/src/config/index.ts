@@ -1,2 +1,4 @@
 export const API_URL =
-  process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000'
+  process.env.NODE_ENV === 'production'
+    ? 'https://8a309e94.ngrok.io/'
+    : 'http://localhost:5000'
