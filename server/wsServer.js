@@ -1,11 +1,11 @@
 'use strict'
-const WebSocketServer = require('ws').Server
+const WebSocket = require('ws')
 const model = require('./model')
 
 const sockets = {}
 
 const createServer = server => {
-  const wss = new WebSocketServer({ server })
+  const wss = new WebSocket.Server({ server })
   console.info('WebSocket server started...')
 
   wss.on('connection', (ws, req) => {
@@ -19,15 +19,25 @@ const createServer = server => {
         } else {
           sockets[id] = [ws]
         }
-        // emitter.on(id, payload => ws.send(JSON.stringify(payload)))
-        // console.log(`listeners on ${id}: ${emitter.listenerCount(id)}`)
-        console.log(sockets)
       }
     })
   })
 }
 
+/**
+ * Sends JSON with payload to all sockets connected to ID
+ * Cleans sockets object of closed sockets
+ * @param {id of model} id
+ * @param {payload to send} payload
+ */
+const sendMessage = (id, payload) => {
+  if (sockets[id]) {
+    sockets[id] = sockets[id].filter(s => s.readyState === WebSocket.OPEN)
+    sockets[id].forEach(ws => ws.send(JSON.stringify(payload)))
+  }
+}
+
 module.exports = {
-  sockets,
   createServer,
+  sendMessage,
 }

@@ -6,7 +6,7 @@
 const { PythonShell } = require('python-shell')
 const shortid = require('shortid')
 const model = require('../model')
-const sockets = require('../wsServer').sockets
+const sockets = require('../wsServer')
 
 /**
  * Gets values from Sense HAT
@@ -58,19 +58,19 @@ module.exports.sendMessage = message => {
     timestamp,
   }
   updateDataArray(actionResource.data, actionObject)
-  sendWsMessage('sendMessage', actionObject)
+  sockets.sendMessage('sendMessage', actionObject)
 
   if (process.env.NODE_ENV !== 'production') {
     //Simulate 1s delay
     setTimeout(() => {
       actionObject.status = 'completed'
-      sendWsMessage('sendMessage', actionObject)
+      sockets.sendMessage('sendMessage', actionObject)
       const resourceObj = {
         [valueName]: message,
         timestamp,
       }
       updateDataArray(propertyResource.data, resourceObj)
-      sendWsMessage('leds', resourceObj)
+      sockets.sendMessage('leds', resourceObj)
     }, 1000)
   } else {
     const options = {
@@ -83,13 +83,13 @@ module.exports.sendMessage = message => {
         console.error(err)
       } else {
         actionObject.status = 'completed'
-        sendWsMessage('sendMessage', actionObject)
+        sockets.sendMessage('sendMessage', actionObject)
         const resourceObj = {
           [valueName]: data[0],
           timestamp,
         }
         updateDataArray(propertyResource.data, resourceObj)
-        sendWsMessage('leds', resourceObj)
+        sockets.sendMessage('leds', resourceObj)
       }
     })
   }
@@ -121,7 +121,7 @@ module.exports.collectData = (interval = 10) => {
           [valueName]: value,
           timestamp,
         }
-        sendWsMessage(key, valueObj)
+        sockets.sendMessage(key, valueObj)
         // emitter.emit(key, valueObj)
         updateDataArray(resource.data, valueObj)
       })
@@ -143,15 +143,4 @@ const updateDataArray = (arr, value) => {
     arr.shift()
   }
   arr.push(value)
-}
-
-/**
- * Sends JSON with payload to all sockets connected to ID
- * @param {id of model} id
- * @param {payload to send} payload
- */
-const sendWsMessage = (id, payload) => {
-  if (sockets[id]) {
-    sockets[id].forEach(ws => ws.send(JSON.stringify(payload)))
-  }
 }

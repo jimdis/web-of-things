@@ -27,7 +27,7 @@ const useWs = (endpoint: string) => {
     return () => {
       didUnmount.current = true
     }
-  })
+  }, [])
 
   useEffect(() => {
     if (lastMessage !== null) {
