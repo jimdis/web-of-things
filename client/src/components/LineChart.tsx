@@ -8,7 +8,19 @@ type LCProps = {
   }[]
 }
 const LineChart = ({ data }: LCProps) => {
-  let domain
+  let domain: [number, number] | undefined
+
+  const values: number[] = []
+  data.forEach(d => {
+    if (!values.includes(d.y)) {
+      values.push(d.y)
+    }
+  })
+  if (values.length < 2) {
+    const value = values[0]
+    domain = [value - 1, value + 1]
+  }
+
   return (
     <div>
       <VictoryChart
@@ -24,7 +36,7 @@ const LineChart = ({ data }: LCProps) => {
             },
           }}
         />
-        <VictoryAxis dependentAxis />
+        <VictoryAxis dependentAxis domain={domain} />
         <VictoryAxis tickCount={3} />
       </VictoryChart>
     </div>

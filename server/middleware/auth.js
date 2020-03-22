@@ -4,9 +4,8 @@
  */
 
 /**
- * Checks header for 'Authorization' and verifies Bearer token.
- * In case token is vefified, adds token to request object.
- * Else sends 401 response.
+ * Checks header for 'X-API-Key' and verifies api key.
+ * In case token does not match env, sends 401 response.
  */
 const auth = async (req, res, next) => {
   try {

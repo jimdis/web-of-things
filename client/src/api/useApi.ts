@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import ax from 'axios'
 import parseLink, { Links } from 'parse-link-header'
 import { IThing, ISubmitAction, ICreatedAction } from './types'
@@ -15,12 +15,15 @@ const useApi = () => {
   const [model, setModel] = useState<IThing | null>(null)
 
   useEffect(() => {
-    const fetchModel = async (endpoint: string) => {
+    const fetchModel = async (
+      endpoint: string,
+      useEndpointsFromModel?: boolean
+    ) => {
       try {
         const { data } = await axios.get<IThing>(endpoint)
         // In case root url failed to provide endpoint links
         if (
-          !endpoints &&
+          useEndpointsFromModel &&
           data?.links?.properties?.link &&
           data?.links?.actions?.link
         ) {
@@ -53,7 +56,7 @@ const useApi = () => {
           fetchModel(links.model.url)
           setEndpoints(links)
         } else {
-          fetchModel('/model') // in case root URL did not return links.. try /model
+          fetchModel('/model', true) // in case root URL did not return links.. try /model
         }
       } catch (e) {
         setError(e.message)
@@ -61,8 +64,6 @@ const useApi = () => {
     }
     fetchLinks()
   }, [])
-
-  useEffect(() => {}, [endpoints])
 
   const fetchData = async (endpoint: string) => {
     try {

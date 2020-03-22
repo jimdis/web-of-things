@@ -56,10 +56,10 @@ const Dashboard = () => {
           {loading ? (
             <Spin size="large" />
           ) : (
-            <Row>
+            <Row gutter={[16, 16]}>
               {propertyResources.length ? (
                 propertyResources.map(p => (
-                  <Col key={p.id} xs={24} sm={12} md={8} lg={6}>
+                  <Col key={p.id} xs={24} sm={12} lg={6}>
                     <Property
                       resource={p}
                       fetchPropertyData={fetchPropertyData}

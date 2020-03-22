@@ -98,7 +98,7 @@ module.exports.sendMessage = message => {
 
 /**
  * Start collecting data from Sense HAT and write to model at selected interval
- * @param {number} interval Collect data every n seconds.
+ * @param {number} interval Collect data every n seconds. Default 10s
  */
 module.exports.collectData = (interval = 10) => {
   const updateSensorData = async () => {
@@ -122,7 +122,6 @@ module.exports.collectData = (interval = 10) => {
           timestamp,
         }
         sockets.sendMessage(key, valueObj)
-        // emitter.emit(key, valueObj)
         updateDataArray(resource.data, valueObj)
       })
       setTimeout(updateSensorData, interval * 1000)

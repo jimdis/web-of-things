@@ -36,9 +36,11 @@ const useWs = (endpoint: string) => {
   }, [lastMessage])
 
   useEffect(() => {
-    console.log(
-      `Connection status changed for ${endpoint} to ${ReadyState[readyState]}`
-    )
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(
+        `Connection status changed for ${endpoint} to ${ReadyState[readyState]}`
+      )
+    }
   }, [readyState, endpoint])
 
   const connectionStatus = () => {

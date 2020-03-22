@@ -1,13 +1,3 @@
-//http://model.webofthings.io/#resources
-export interface IEndpoints {
-  model?: string
-  properties?: string
-  actions?: string
-  product?: string
-  type?: string
-  help?: string
-}
-
 // http://model.webofthings.io/#common-constructs
 export interface IThing {
   id: string
