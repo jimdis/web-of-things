@@ -69,12 +69,12 @@ module.exports.sendMessage = message => {
     ) {
       pendingAction.status = 'executing'
       sockets.sendMessage('sendMessage', pendingAction)
-      runMessageScript(message)
+      runMessageScript(pendingAction.value[actionName])
         .then(() => {
           pendingAction.status = 'completed'
           sockets.sendMessage('sendMessage', pendingAction)
           const resourceObj = {
-            [valueName]: message,
+            [valueName]: pendingAction.value[actionName],
             timestamp,
           }
           updateDataArray(propertyResource.data, resourceObj)
@@ -94,6 +94,7 @@ module.exports.sendMessage = message => {
 const runMessageScript = message =>
   new Promise((res, rej) => {
     if (process.env.NODE_ENV !== 'production') {
+      console.log(message)
       setTimeout(() => res(), 10000)
     } else {
       const options = {
