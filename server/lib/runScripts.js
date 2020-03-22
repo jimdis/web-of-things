@@ -60,41 +60,54 @@ module.exports.sendMessage = message => {
   updateDataArray(actionResource.data, actionObject)
   sockets.sendMessage('sendMessage', actionObject)
 
-  if (process.env.NODE_ENV !== 'production') {
-    //Simulate 1s delay
-    setTimeout(() => {
-      actionObject.status = 'completed'
-      sockets.sendMessage('sendMessage', actionObject)
-      const resourceObj = {
-        [valueName]: message,
-        timestamp,
-      }
-      updateDataArray(propertyResource.data, resourceObj)
-      sockets.sendMessage('leds', resourceObj)
-    }, 1000)
-  } else {
-    const options = {
-      scriptPath: './scripts',
-      args: [message],
+  // Runs pending action when no executing actions are found
+  const executeAction = () => {
+    const pendingAction = actionResource.data.find(v => v.status === 'pending')
+    if (
+      pendingAction &&
+      !actionResource.data.find(v => v.status === 'executing')
+    ) {
+      pendingAction.status = 'executing'
+      sockets.sendMessage('sendMessage', pendingAction)
+      runMessageScript(message)
+        .then(() => {
+          pendingAction.status = 'completed'
+          sockets.sendMessage('sendMessage', pendingAction)
+          const resourceObj = {
+            [valueName]: message,
+            timestamp,
+          }
+          updateDataArray(propertyResource.data, resourceObj)
+          sockets.sendMessage('leds', resourceObj)
+          executeAction() // run next pending action
+        })
+        .catch(e => {
+          pendingAction.status = 'failed'
+          console.error(e)
+        })
     }
-    PythonShell.run('sendMessage.py', options, (err, data) => {
-      if (err) {
-        actionObject.status = 'failed'
-        console.error(err)
-      } else {
-        actionObject.status = 'completed'
-        sockets.sendMessage('sendMessage', actionObject)
-        const resourceObj = {
-          [valueName]: data[0],
-          timestamp,
-        }
-        updateDataArray(propertyResource.data, resourceObj)
-        sockets.sendMessage('leds', resourceObj)
-      }
-    })
   }
+  executeAction()
   return actionObject
 }
+
+const runMessageScript = message =>
+  new Promise((res, rej) => {
+    if (process.env.NODE_ENV !== 'production') {
+      setTimeout(() => res(), 10000)
+    } else {
+      const options = {
+        scriptPath: './scripts',
+        args: [message],
+      }
+      PythonShell.run('sendMessage.py', options, err => {
+        if (err) {
+          return rej(err)
+        }
+        return res()
+      })
+    }
+  })
 
 /**
  * Start collecting data from Sense HAT and write to model at selected interval
