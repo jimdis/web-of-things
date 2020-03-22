@@ -30,7 +30,7 @@ app.use(compression())
 app.use(
   cors({
     methods: ['GET', 'POST'],
-    exposedHeaders: '*',
+    exposedHeaders: ['Link', 'Location'],
   })
 )
 
